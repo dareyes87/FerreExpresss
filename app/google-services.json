@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "3191749487",
+    "project_id": "ferreexpress-76b5b",
+    "storage_bucket": "ferreexpress-76b5b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:3191749487:android:754b499d41f7ca64dd069a",
+        "android_client_info": {
+          "package_name": "com.example.ferreexpress"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0u0obM2_AvgInKT1eIJPHKAJvSuv_IzA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
