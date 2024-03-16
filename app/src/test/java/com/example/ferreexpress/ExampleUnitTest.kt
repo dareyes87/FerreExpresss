@@ -1,4 +1,4 @@
-package com.example.ferreexpress
+package com.umg.ferreexpress
 
 import org.junit.Test
 
