@@ -1,4 +1,4 @@
-package com.umg.ferreexpress
+package com.example.ferreexpress
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

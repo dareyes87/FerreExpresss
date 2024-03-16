@@ -1,11 +1,10 @@
-package com.umg.ferreexpress
+package com.example.ferreexpress
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.ferreexpress.R
 
 class Home : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
