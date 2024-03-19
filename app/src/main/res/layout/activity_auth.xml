@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#192B35"
-    tools:context="com.example.ferreexpress.com.umg.ferreexpress.AuthActivity">
+    tools:context="com.example.ferreexpress.Activity.AuthActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstInicio"

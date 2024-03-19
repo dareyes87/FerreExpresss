@@ -6,31 +6,38 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager2.widget.CompositePageTransformer
+import androidx.viewpager2.widget.MarginPageTransformer
+import com.example.ferreexpress.Adapter.SliderAdapter
 import com.example.ferreexpress.Domain.SliderItems
 import com.example.ferreexpress.R
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.example.ferreexpress.databinding.ActivityHomeBinding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+
 
 class AuthActivity : Home() {
 
-    private lateinit var binding: ActivityHomeBinding
 
+    //private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
-        //SPLASH
-        //Thread.sleep(2000)
-        //setTheme(R.style.Theme_FerreExpress)
-
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         setContentView(R.layout.activity_auth)
+        database = FirebaseDatabase.getInstance()
         
         //ANALYTICS EVENT
         val analytics: FirebaseAnalytics = FirebaseAnalytics.getInstance(this)
@@ -47,37 +54,13 @@ class AuthActivity : Home() {
             insets
         }
 
-        initBanner()
+
 
     }
 
-    private fun initBanner() {
-        var myRef:DatabaseReference = database.getReference("Banner")
-        binding.progressBarBanner.visibility = View.VISIBLE
-        var items:ArrayList<SliderItems> = ArrayList()
-        myRef.addListenerForSingleValueEvent(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.exists()){
-                    for(issueSnapshot in snapshot.children){
-                        items.add(issueSnapshot.getValue(SliderItems::class.java)!!)
-                    }
-                    banner(items)
-                    binding.progressBarBanner.visibility = View.GONE
-                }
-            }
 
 
 
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-
-        })
-    }
-
-    private fun banner(items: ArrayList<SliderItems>) {
-
-    }
 
     private fun setup(){
         title = "Autenticacion"
@@ -125,7 +108,6 @@ class AuthActivity : Home() {
 
     private fun showHome(){
         val homeIntent = Intent(this, Home::class.java).apply {
-
         }
         startActivity(homeIntent)
     }
