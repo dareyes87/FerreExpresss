@@ -1,12 +1,15 @@
-package com.example.ferreexpress
+package com.example.ferreexpress.Activity
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.ferreexpress.R
+import com.google.firebase.database.FirebaseDatabase
 
-class Home : AppCompatActivity() {
+open class Home : AppCompatActivity() {
+    var database:FirebaseDatabase = FirebaseDatabase.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
