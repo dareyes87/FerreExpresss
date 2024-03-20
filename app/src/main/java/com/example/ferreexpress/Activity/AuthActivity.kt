@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AlertDialog
@@ -22,7 +21,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.example.ferreexpress.databinding.ActivityHomeBinding
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -31,7 +29,7 @@ import com.google.firebase.ktx.Firebase
 
 
 class AuthActivity : Home() {
-    var firebaseUser : FirebaseUser?=null
+
 
     //private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,18 +111,5 @@ class AuthActivity : Home() {
         }
         startActivity(homeIntent)
     }
-    private fun ComprobarSesion(){
-    firebaseUser = FirebaseAuth.getInstance().currentUser
-        if (firebaseUser!=null){
-            val intent = Intent(this@AuthActivity, Home::class.java)
-            Toast.makeText(applicationContext, "La sesión esta Activa", Toast.LENGTH_SHORT).show()
-            startActivity(intent)
-            finish()
-        }
-    }
 
-    override fun onStart() {
-        ComprobarSesion()
-        super.onStart()
-    }
 }
