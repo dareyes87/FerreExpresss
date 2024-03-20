@@ -63,6 +63,9 @@ class AuthActivity : Home() {
     }
 
 
+
+
+
     private fun setup(){
         title = "Autenticacion"
         val btnRegistro = findViewById<Button>(R.id.btnregistro)
@@ -112,9 +115,8 @@ class AuthActivity : Home() {
         }
         startActivity(homeIntent)
     }
-
-    private fun PruebaGit(){
-        //Esta es una prueba para el manejo de git
+    private fun PruebaDosGit(){
+        //Esta es la segunda prueba para el manejo de git
     }
 
     private fun ComprobarSesion(){
