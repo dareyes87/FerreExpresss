@@ -111,5 +111,7 @@ class AuthActivity : Home() {
         }
         startActivity(homeIntent)
     }
-
+    private fun PruebaDosGit(){
+        //Esta es la segunda prueba para el manejo de git
+    }
 }
