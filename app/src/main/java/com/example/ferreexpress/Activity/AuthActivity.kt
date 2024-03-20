@@ -134,4 +134,8 @@ class AuthActivity : Home() {
         super.onStart()
     }
 
+    private fun PruebaGitDosDos(){
+        //Una funcion vacia
+    }
+
 }
