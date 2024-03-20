@@ -27,9 +27,13 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
+import android.widget.Toast
+
+import com.google.firebase.auth.FirebaseUser
 
 class AuthActivity : Home() {
 
+    var firebaseUser : FirebaseUser?=null
 
     //private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -111,6 +115,21 @@ class AuthActivity : Home() {
 
     private fun PruebaGit(){
         //Esta es una prueba para el manejo de git
+    }
+
+    private fun ComprobarSesion(){
+        firebaseUser = FirebaseAuth.getInstance().currentUser
+        if (firebaseUser!=null){
+            val intent = Intent(this@AuthActivity, Home::class.java)
+            Toast.makeText(applicationContext, "La sesión esta Activa", Toast.LENGTH_SHORT).show()
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    override fun onStart() {
+        ComprobarSesion()
+        super.onStart()
     }
 
 }
