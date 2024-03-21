@@ -9,7 +9,7 @@
     android:elevation="3dp">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/pic"
+        android:id="@+id/picture"
         android:layout_width="175dp"
         android:layout_height="130dp"
         android:layout_marginTop="16dp"
@@ -27,16 +27,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pic" />
+        app:layout_constraintTop_toBottomOf="@+id/picture" />
 
     <TextView
-        android:id="@+id/title"
+        android:id="@+id/titulotxt"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:lines="2"
         android:maxLines="2"
-        android:text="Title"
+        android:text="title"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:textStyle="bold"
@@ -58,7 +58,7 @@
         android:progressTint="#ffc106"
         style="@android:style/Widget.DeviceDefault.RatingBar.Small"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pic" />
+        app:layout_constraintTop_toBottomOf="@+id/picture" />
 
     <TextView
         android:id="@+id/oldPricetxt"
@@ -70,7 +70,7 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toBottomOf="@+id/titulotxt" />
 
     <TextView
         android:id="@+id/pricetxt"
