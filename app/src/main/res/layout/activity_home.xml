@@ -11,7 +11,7 @@
         android:id="@+id/scrollView3"
         android:layout_width="414dp"
         android:layout_height="870dp"
-        android:background="#FFFFFF"
+        android:background="#192B35"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -218,6 +218,7 @@
                     android:clipToPadding="false"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
+                    android:backgroundTint="#383838"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -268,7 +269,7 @@
             android:layout_height="60dp"
             android:layout_gravity="bottom"
             android:background="#FFEFDE"
-            app:backgroundTint="#FFEFDE">
+            app:backgroundTint="#383838">
 
             <LinearLayout
                 android:layout_width="match_parent"

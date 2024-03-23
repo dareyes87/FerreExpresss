@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.request.RequestOptions
 import com.example.ferreexpress.Domain.CategoryDomain
 import com.example.ferreexpress.databinding.ViewholderCategoryBinding
 
@@ -29,9 +31,13 @@ class CategoryAdapter(private val items: ArrayList<CategoryDomain>) : RecyclerVi
 
     inner class Viewholder(private val binding: ViewholderCategoryBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(category: CategoryDomain) {
-            binding.title.text = category.titulo
+            //binding.title.text = items.get(position).titulo
+
+            val requestOptions = RequestOptions().transform(CenterCrop())
+
             Glide.with(context)
-                .load(category.picUrl)
+                .load(items.get(position).picUrl)
+                .apply(requestOptions)
                 .into(binding.pic)
         }
     }
