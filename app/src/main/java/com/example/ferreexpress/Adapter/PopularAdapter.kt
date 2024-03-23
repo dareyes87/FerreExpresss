@@ -1,6 +1,7 @@
 package com.example.ferreexpress.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
+import com.example.ferreexpress.Activity.DetailActivity
 import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.databinding.ViewholderBestnoteListBinding
 
@@ -34,7 +36,9 @@ class PopularAdapter(private val items: ArrayList<itemsDomain>): RecyclerView.Ad
                 .into(binding.picture)
 
             binding.view.setOnClickListener(){
-
+                var intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("object", items.get(position))//intent.putExtra("object", items[position])
+                context.startActivity(intent)
             }
 
         }

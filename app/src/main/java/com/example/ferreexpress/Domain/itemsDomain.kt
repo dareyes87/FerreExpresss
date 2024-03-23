@@ -10,7 +10,7 @@ public class itemsDomain: Serializable {
     public var oldPrice: Double = 0.0
     public var review: Int = 0
     public var rating: Double = 0.0
-    public var numberInCar: Int = 0
+    var numberinCart: Int = 0
 
     constructor()
     constructor(
