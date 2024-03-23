@@ -78,6 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:textSize="12sp"
+        android:textStyle="bold"
         android:text="Q123"
         android:textColor="#00A807"
         app:layout_constraintBottom_toBottomOf="@+id/oldPricetxt"
