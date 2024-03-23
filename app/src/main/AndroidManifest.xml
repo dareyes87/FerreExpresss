@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -15,7 +15,10 @@
         android:theme="@style/Theme.FerreExpress"
         tools:targetApi="31">
         <activity
-            android:name="com.example.ferreexpress.Activity.Home"
+            android:name=".Activity.DetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.Home"
             android:exported="false" />
 
         <meta-data
@@ -23,7 +26,7 @@
             android:resource="@xml/rounded_corner" />
 
         <activity
-            android:name="com.example.ferreexpress.Activity.AuthActivity"
+            android:name=".Activity.AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
