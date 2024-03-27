@@ -19,35 +19,37 @@ class CartAdapter(
 ) : RecyclerView.Adapter<CartAdapter.Viewholder>() {
 
     private val managmentCart: ManagmentCart = ManagmentCart(context)
+    //private lateinit var contxt: Context
 
     inner class Viewholder(private val binding: ViewholderCartBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(cart: itemsDomain) {
-            binding.titleTxt.text = listItemSelected.get(position).title
-            binding.feeEachItem.text = "Q"+listItemSelected.get(position).price
-            binding.totalEachItem.text = "Q"+Math.round(listItemSelected.get(position).numberinCart*listItemSelected.get(position).price)
-            binding.numberItemTxt.text = listItemSelected[position].numberinCart.toString()
+            binding.titleTxt.text = cart.title
+            binding.feeEachItem.text = "Q${cart.price}"
+            binding.totalEachItem.text = "Q${Math.round(cart.numberinCart * cart.price)}"
+            binding.numberItemTxt.text = cart.numberinCart.toString()
 
             val requestOptions = RequestOptions().transform(CenterCrop())
 
-            Glide.with(itemView.context)
-                .load(listItemSelected.get(position).picUrl.get(0))
+            Glide.with(context)
+                .load(cart.picUrl[0])
                 .apply(requestOptions)
                 .into(binding.pic)
 
-            binding.plusCartBtn.setOnClickListener {
-                managmentCart.plusItem(listItemSelected, position) {
+            val changeNumberItemsListener = object : ChangeNumberItemsListener {
+                override fun changed() {
                     notifyDataSetChanged()
                     changeNumberItemsListener.changed()
                 }
             }
 
+            binding.plusCartBtn.setOnClickListener {
+                managmentCart.plusItem(listItemSelected, adapterPosition, changeNumberItemsListener)
+            }
+
             binding.minusCartBtn.setOnClickListener{
-                managmentCart.minusItem(listItemSelected, position){
-                    notifyDataSetChanged()
-                    changeNumberItemsListener.changed()
-                }
+                managmentCart.minusItem(listItemSelected, adapterPosition, changeNumberItemsListener)
             }
 
         }
@@ -55,8 +57,7 @@ class CartAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartAdapter.Viewholder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ViewholderCartBinding.inflate(inflater, parent, false)
+        val binding = ViewholderCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return Viewholder(binding)
     }
 
@@ -67,6 +68,5 @@ class CartAdapter(
     override fun getItemCount(): Int {
         return listItemSelected.size
     }
-
 
 }

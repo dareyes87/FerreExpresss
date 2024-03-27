@@ -80,11 +80,9 @@ open class Home : AppCompatActivity() {
                     binding.progressBarPopular.visibility = View.GONE
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
-
         })
     }
 
@@ -108,14 +106,10 @@ open class Home : AppCompatActivity() {
                     binding.progressBarCategory.visibility = View.GONE
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
             }
-
         })
-
-
     }
 
     private fun initBanner() {
@@ -160,7 +154,5 @@ open class Home : AppCompatActivity() {
         binding.viewpagerSlider.setPageTransformer(compositePageTransformer)
 
     }
-
-
 
 }

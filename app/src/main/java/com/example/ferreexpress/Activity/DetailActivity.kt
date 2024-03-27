@@ -2,11 +2,6 @@ package com.example.ferreexpress.Activity
 
 import android.os.Bundle
 import android.os.Handler
-import android.view.View
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -18,7 +13,6 @@ import com.example.ferreexpress.Fragment.DescriptionFragment
 import com.example.ferreexpress.Fragment.ReviewFragment
 import com.example.ferreexpress.Fragment.SoldFragment
 import com.example.ferreexpress.Helper.ManagmentCart
-import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.ActivityDetailBinding
 
 class DetailActivity : Home() {

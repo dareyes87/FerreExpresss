@@ -13,7 +13,9 @@ import com.example.ferreexpress.Activity.DetailActivity
 import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.databinding.ViewholderBestnoteListBinding
 
-class PopularAdapter(private val items: ArrayList<itemsDomain>): RecyclerView.Adapter<PopularAdapter.Viewholder>() {
+class PopularAdapter(
+    private val items: ArrayList<itemsDomain>
+): RecyclerView.Adapter<PopularAdapter.Viewholder>() {
 
     private lateinit var context: Context
 
