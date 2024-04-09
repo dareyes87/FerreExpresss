@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".Activity.ProfileActivity">
 
+    <!-- FAVOR DE IGNORARME, SOY CODIGO INUIT -->
+
     <FrameLayout
         android:id="@+id/frameProfile"
         android:layout_width="match_parent"

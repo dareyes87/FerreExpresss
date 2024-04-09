@@ -1,5 +1,8 @@
 package com.example.ferreexpress.Activity
 
+//FAVOR DE IGNORARME, SOY CODIGO INUTIL POR EL MOMENTO!!!
+//VARGAS SE LA COME XD
+
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager

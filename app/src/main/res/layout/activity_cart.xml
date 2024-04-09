@@ -7,6 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".Activity.CartActivity">
 
+    <!-- FAVOR DE IGNORARME, SOY CODIGO INUIT -->
+
     <TextView
         android:id="@+id/emptyTxt"
         android:layout_width="wrap_content"

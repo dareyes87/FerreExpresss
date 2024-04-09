@@ -1,5 +1,6 @@
 package com.example.ferreexpress.Activity
-
+//FAVOR DE IGNORARME, SOY CODIGO INUTIL POR EL MOMENTO!!!
+//VARGAS SE LA COME XD
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
