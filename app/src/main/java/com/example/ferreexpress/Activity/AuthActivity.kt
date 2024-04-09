@@ -111,7 +111,7 @@ class AuthActivity : Home() {
     }
 
     private fun showHome(){
-        val homeIntent = Intent(this, Home::class.java).apply {
+        val homeIntent = Intent(this, MainActivity::class.java).apply {
         }
         startActivity(homeIntent)
     }
@@ -122,7 +122,7 @@ class AuthActivity : Home() {
     private fun ComprobarSesion(){
         firebaseUser = FirebaseAuth.getInstance().currentUser
         if (firebaseUser!=null){
-            val intent = Intent(this@AuthActivity, Home::class.java)
+            val intent = Intent(this@AuthActivity, MainActivity::class.java)
             Toast.makeText(applicationContext, "La sesión esta Activa", Toast.LENGTH_SHORT).show()
             startActivity(intent)
             finish()

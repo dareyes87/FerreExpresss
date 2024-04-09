@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bottom_home"
+        android:title="HOME"
+        android:icon="@drawable/homewhite"/>
+
+    <item
+        android:id="@+id/bottom_cart"
+        android:title="CARRITO"
+        android:icon="@drawable/shoppingwhite"/>
+
+    <item
+        android:id="@+id/bottom_profile"
+        android:title="CUENTA"
+        android:icon="@drawable/userwhite"/>
+
+</menu>
