@@ -12,6 +12,11 @@
         android:icon="@drawable/shoppingwhite"/>
 
     <item
+        android:id="@+id/bottom_store"
+        android:title="MI TIENDA"
+        android:icon="@drawable/storewhite"/>
+
+    <item
         android:id="@+id/bottom_profile"
         android:title="CUENTA"
         android:icon="@drawable/userwhite"/>

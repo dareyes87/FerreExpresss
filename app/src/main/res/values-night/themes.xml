@@ -8,7 +8,7 @@
         <item name="android:statusBarColor">@color/black</item>
     </style>
 
-    <style name="Theme.FerreExpress" parent="Base.Theme.FerreExpress"/>
+    <style name="Theme.FerreExpress" parent="Base.Theme.FerreExpress" />
 
     <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:color">@color/black</item>

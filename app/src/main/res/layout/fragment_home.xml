@@ -37,12 +37,13 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:background="@drawable/edittext_bg"
-                        android:drawableStart="@drawable/search_icon"
+                        android:drawableStart="?android:attr/actionModeWebSearchDrawable"
                         android:drawablePadding="8dp"
                         android:ems="10"
                         android:hint="Buscar..."
                         android:inputType="text"
                         android:padding="8dp"
+                        android:textColor="#000000"
                         android:textColorHint="#676767" />
 
                     <androidx.constraintlayout.widget.ConstraintLayout
@@ -52,15 +53,15 @@
 
                         <ImageView
                             android:id="@+id/imageView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.529"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintVertical_bias="0.545"
-                            app:srcCompat="@drawable/bell_icon" />
+                            app:srcCompat="@drawable/ic_notifications_black_24dp" />
 
                         <ImageView
                             android:id="@+id/imageView2"
@@ -77,6 +78,7 @@
                             android:layout_marginEnd="8dp"
                             android:text="0"
                             android:textColor="@color/white"
+                            android:textStyle="bold"
                             app:layout_constraintEnd_toEndOf="@+id/imageView2"
                             app:layout_constraintHorizontal_bias="1.0"
                             app:layout_constraintStart_toStartOf="parent"

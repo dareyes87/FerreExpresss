@@ -35,6 +35,10 @@ class MainActivity : AppCompatActivity() {
                     replaceFragment(CartFragment())
                     true
                 }
+                R.id.bottom_store -> {
+                    replaceFragment(StoreFragment())
+                    true
+                }
                 else -> false
             }
         }

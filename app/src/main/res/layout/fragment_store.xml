@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.StoreFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatBtnAddProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="90dp"
+            android:clickable="false"
+            android:scrollbarAlwaysDrawHorizontalTrack="false"
+            android:src="@drawable/ic_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView23"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="MI NEGOCIO EN LINEA"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textStyle="bold" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp">
+
+                    <RatingBar
+                        android:id="@+id/ratingBar"
+                        style="@android:style/Widget.DeviceDefault.RatingBar.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:indeterminate="false"
+                        android:isIndicator="true"
+                        android:numStars="5"
+                        android:progressTint="#ffc106"
+                        android:rating="3"
+                        android:stepSize="0.1"
+                        app:layout_constraintStart_toEndOf="@+id/imageView11"
+                        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+                    <ImageView
+                        android:id="@+id/imageView11"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:layout_marginStart="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@tools:sample/avatars" />
+
+                    <TextView
+                        android:id="@+id/textViewNameNegocio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text="Ferreteria Aki"
+                        app:layout_constraintStart_toEndOf="@+id/imageView11"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/textView18"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:text="0"
+                        app:layout_constraintStart_toEndOf="@+id/imageView11"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewNameNegocio" />
+
+                    <TextView
+                        android:id="@+id/textView20"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Seguidores"
+                        app:layout_constraintStart_toEndOf="@+id/textView18"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewNameNegocio" />
+
+                    <TextView
+                        android:id="@+id/textView24"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="0"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toEndOf="@+id/ratingBar"
+                        app:layout_constraintTop_toTopOf="@+id/ratingBar" />
+
+                    <TextView
+                        android:id="@+id/textView25"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="(0 opiniones)"
+                        android:textSize="12sp"
+                        app:layout_constraintStart_toEndOf="@+id/textView24"
+                        app:layout_constraintTop_toTopOf="@+id/textView24" />
+
+                    <TextView
+                        android:id="@+id/textView26"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Aqui va a ir la descripcion del negocio etc etc"
+                        android:textSize="13sp"
+                        app:layout_constraintStart_toEndOf="@+id/imageView11"
+                        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:id="@+id/view3"
+                    android:layout_width="match_parent"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="16dp"
+                    android:background="#D2D2D2" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/editTextText"
+                        android:layout_width="350dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edittext_bg"
+                        android:drawableStart="?android:attr/actionModeWebSearchDrawable"
+                        android:drawablePadding="8dp"
+                        android:ems="10"
+                        android:hint="Buscar..."
+                        android:inputType="text"
+                        android:padding="8dp"
+                        android:textColor="#000000"
+                        android:textColorHint="#676767" />
+
+                    <ImageView
+                        android:id="@+id/imageView10"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_weight="1"
+                        android:src="@drawable/filtroswhite" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
