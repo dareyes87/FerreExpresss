@@ -1,13 +1,11 @@
 package com.example.ferreexpress.Activity
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.widget.LinearLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -20,8 +18,6 @@ import com.example.ferreexpress.Adapter.PopularAdapter
 import com.example.ferreexpress.Domain.CategoryDomain
 import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.R
-import com.example.ferreexpress.Activity.CartActivity
-import com.example.ferreexpress.Activity.ProfileActivity
 import com.example.ferreexpress.Adapter.SliderAdapter
 import com.example.ferreexpress.Domain.SliderItems
 import com.example.ferreexpress.databinding.FragmentHomeBinding

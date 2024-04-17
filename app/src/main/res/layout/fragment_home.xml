@@ -52,7 +52,7 @@
                         android:background="@drawable/edittext_bg">
 
                         <ImageView
-                            android:id="@+id/imageView"
+                            android:id="@+id/imageViewPush"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             app:layout_constraintBottom_toBottomOf="parent"

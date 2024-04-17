@@ -2,6 +2,7 @@ package com.example.ferreexpress.Activity
 
 import android.os.Bundle
 import android.os.Handler
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
@@ -15,7 +16,7 @@ import com.example.ferreexpress.Fragment.SoldFragment
 import com.example.ferreexpress.Helper.ManagmentCart
 import com.example.ferreexpress.databinding.ActivityDetailBinding
 
-class DetailActivity : Home() {
+class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
     private lateinit var item: itemsDomain
     private var numberOrder: Int = 1
