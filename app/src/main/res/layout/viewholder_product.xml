@@ -9,7 +9,7 @@
     android:elevation="3dp">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/picture"
+        android:id="@+id/productImage"
         android:layout_width="175dp"
         android:layout_height="130dp"
         android:layout_marginTop="16dp"
@@ -27,10 +27,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/picture" />
+        app:layout_constraintTop_toBottomOf="@+id/productImage" />
 
     <TextView
-        android:id="@+id/titulotxt"
+        android:id="@+id/textName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -41,27 +41,27 @@
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/ratingBar"
-        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+        app:layout_constraintStart_toStartOf="@+id/rating"
+        app:layout_constraintTop_toBottomOf="@+id/rating" />
 
     <RatingBar
-        android:id="@+id/ratingBar"
+        android:id="@+id/ratingBarProduct"
+        style="@android:style/Widget.DeviceDefault.RatingBar.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:numStars="5"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:indeterminate="false"
         android:isIndicator="true"
+        android:numStars="5"
+        android:progressTint="#ffc106"
         android:rating="3"
         android:stepSize="0.1"
-        android:progressTint="#ffc106"
-        style="@android:style/Widget.DeviceDefault.RatingBar.Small"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/picture" />
+        app:layout_constraintTop_toBottomOf="@+id/productImage" />
 
     <TextView
-        android:id="@+id/oldPricetxt"
+        android:id="@+id/txtoldPrice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -70,10 +70,10 @@
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titulotxt" />
+        app:layout_constraintTop_toBottomOf="@+id/textName" />
 
     <TextView
-        android:id="@+id/pricetxt"
+        android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -81,40 +81,40 @@
         android:textStyle="bold"
         android:text="Q123"
         android:textColor="#00A807"
-        app:layout_constraintBottom_toBottomOf="@+id/oldPricetxt"
-        app:layout_constraintStart_toEndOf="@+id/oldPricetxt"
-        app:layout_constraintTop_toTopOf="@+id/oldPricetxt" />
+        app:layout_constraintBottom_toBottomOf="@+id/txtoldPrice"
+        app:layout_constraintStart_toEndOf="@+id/txtoldPrice"
+        app:layout_constraintTop_toTopOf="@+id/txtoldPrice" />
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/imageView83"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/pricetxt"
+        app:layout_constraintBottom_toBottomOf="@+id/price"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/pricetxt"
+        app:layout_constraintTop_toTopOf="@+id/price"
         app:srcCompat="@drawable/comentario_icon" />
 
     <TextView
-        android:id="@+id/reviewstxt"
+        android:id="@+id/reviews"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
         android:text="12"
         android:textColor="@color/white"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView8"
-        app:layout_constraintEnd_toStartOf="@+id/imageView8"
-        app:layout_constraintTop_toTopOf="@+id/imageView8" />
+        app:layout_constraintBottom_toBottomOf="@+id/imageView83"
+        app:layout_constraintEnd_toStartOf="@+id/imageView83"
+        app:layout_constraintTop_toTopOf="@+id/imageView83" />
 
     <TextView
-        android:id="@+id/ratingtxt"
+        android:id="@+id/rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="(5)"
         android:textSize="10sp"
-        app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
-        app:layout_constraintStart_toEndOf="@+id/ratingBar"
-        app:layout_constraintTop_toTopOf="@+id/ratingBar" />
+        app:layout_constraintBottom_toBottomOf="@+id/ratingBarProduct"
+        app:layout_constraintStart_toEndOf="@+id/ratingBarProduct"
+        app:layout_constraintTop_toTopOf="@+id/ratingBarProduct" />
 </androidx.constraintlayout.widget.ConstraintLayout>

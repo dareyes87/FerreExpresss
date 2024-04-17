@@ -16,11 +16,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ferreexpress.Adapter.ImageAdapter
 import com.example.ferreexpress.R
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Firebase
 import com.google.firebase.database.database
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import java.util.UUID
 
 class AddProductActivity : AppCompatActivity() {
     private var imageUri: Uri? = null
+    private var images: MutableList<Uri> = mutableListOf()
+    private var storageRef: StorageReference? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +45,10 @@ class AddProductActivity : AppCompatActivity() {
             openImageSelector()
         }
 
+        storageRef = FirebaseStorage.getInstance().reference
+
         val recyclerImage: RecyclerView = findViewById(R.id.recyclerImages)
         recyclerImage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-
 
         pushProduct()
     }
@@ -54,35 +62,74 @@ class AddProductActivity : AppCompatActivity() {
         val spinnerCategory: Spinner = findViewById(R.id.spinnerCategory)
         val textDescription: EditText = findViewById(R.id.textDescripcion)
 
-
         //Accion para agregar el nuevo producto
         val buttonAddProduct: Button = findViewById(R.id.btnPushProduct)
         buttonAddProduct.setOnClickListener{
             val tite = textTitle.text.toString()
-            val price = textPrice.text.toString()
+            val price = textPrice.text.toString().toDoubleOrNull() ?: 0.0
             val category = spinnerCategory.selectedItem.toString()
             val descripcion = textDescription.text.toString()
 
-            //Objeto del Producto
-            val newProduct = mapOf(
-                "title" to title,
-                "price" to price,
-                "category" to category,
-                "descripcion" to descripcion
-            )
-
-            //Agregarlo a la base de datos
-            val userId = "UserID_1"
-            val userProductsRef = usersRef.child(userId).child("products")
-            val newProductRef = userProductsRef.push()
-            newProductRef.setValue(newProduct)
-                .addOnSuccessListener {
-                    Toast.makeText(this, "Producto agregado a tu comercio", Toast.LENGTH_SHORT).show()
+            val tasks: MutableList<Task<Uri>> = mutableListOf()
+            for(imageUri in images){
+                val imageName = "image_" + UUID.randomUUID().toString()
+                val imageRef = storageRef?.child("images/$imageName")
+                val uploadTask = imageRef?.putFile(imageUri)
+                uploadTask?.let { task ->
+                    tasks.add(task.continueWithTask { task ->
+                        if (!task.isSuccessful) {
+                            task.exception?.let {
+                                throw it
+                            }
+                        }
+                        imageRef.downloadUrl
+                    })
                 }
-                .addOnFailureListener{e ->
-                    Toast.makeText(this, "Error al agregar el producto", Toast.LENGTH_SHORT).show()
-                }
+            }
 
+            Tasks.whenAllComplete(tasks)
+                .addOnCompleteListener { taskList ->
+                    val downloadUrls: MutableList<String> = mutableListOf()
+                    for (task in taskList.result!!) {
+                        if (task.isSuccessful) {
+                            val uri = task.result as Uri
+                            downloadUrls.add(uri.toString())
+                        } else {
+                            // Maneja errores de carga de imágenes
+                            Toast.makeText(
+                                this,
+                                "Error al subir una o más imágenes",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+
+                    //Objeto del Producto
+                    val newProduct = mapOf(
+                        "title" to tite,
+                        "price" to price,
+                        "category" to category,
+                        "descripcion" to descripcion,
+                        "imageUrls" to downloadUrls
+                    )
+
+                    //Agregarlo a la base de datos
+                    val userId = "UserID_1"
+                    val userProductsRef = usersRef.child(userId).child("products")
+                    val newProductRef = userProductsRef.push()
+                    newProductRef.setValue(newProduct)
+                        .addOnSuccessListener {
+                            Toast.makeText(
+                                this,
+                                "Producto agregado a tu comercio",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        .addOnFailureListener { e ->
+                            Toast.makeText(this, "Error al agregar el producto", Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                }
         }
     }
 
@@ -96,14 +143,14 @@ class AddProductActivity : AppCompatActivity() {
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             val data: Intent? = result.data
-            val images: MutableList<Uri> = mutableListOf()
+            images.clear()
             data?.clipData?.let { clipData ->
                 for (i in 0 until clipData.itemCount) {
                     val uri = clipData.getItemAt(i).uri
-                    images.add(uri)
+                    this.images.add(uri)
                 }
             } ?: data?.data?.let { uri ->
-                images.add(uri)
+                this.images.add(uri)
             }
 
             val recyclerImage: RecyclerView = findViewById(R.id.recyclerImages)

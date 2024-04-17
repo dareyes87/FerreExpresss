@@ -60,6 +60,4 @@ class PopularAdapter(
         return items.size
     }
 
-
-
 }
