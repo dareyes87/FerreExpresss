@@ -33,15 +33,11 @@
         <activity
             android:name=".Activity.ProfileActivity"
             android:exported="false" />
-        <activity
-            android:name=".Activity.CartActivity"
-            android:exported="false" />
+
         <activity
             android:name=".Activity.DetailActivity"
             android:exported="false" />
-        <activity
-            android:name=".Activity.Home"
-            android:exported="false" />
+
 
         <meta-data
             android:name="com.google.android.actions"
