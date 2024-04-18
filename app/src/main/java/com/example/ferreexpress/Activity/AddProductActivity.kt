@@ -110,7 +110,7 @@ class AddProductActivity : AppCompatActivity() {
                         "price" to price,
                         "category" to category,
                         "descripcion" to descripcion,
-                        "imageUrls" to downloadUrls
+                        "picUrl" to downloadUrls
                     )
 
                     //Agregarlo a la base de datos

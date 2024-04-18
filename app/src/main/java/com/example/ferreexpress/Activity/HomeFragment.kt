@@ -9,19 +9,24 @@ import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.CompositePageTransformer
 import androidx.viewpager2.widget.MarginPageTransformer
 import com.example.ferreexpress.Adapter.CategoryAdapter
-import com.example.ferreexpress.Adapter.PopularAdapter
+import com.example.ferreexpress.Adapter.ProductAdapter
+import com.example.ferreexpress.Adapter.SliderAdapter
 import com.example.ferreexpress.Domain.CategoryDomain
+import com.example.ferreexpress.Domain.SliderItems
 import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.R
-import com.example.ferreexpress.Adapter.SliderAdapter
-import com.example.ferreexpress.Domain.SliderItems
 import com.example.ferreexpress.databinding.FragmentHomeBinding
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
@@ -47,7 +52,7 @@ class HomeFragment : Fragment() {
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
 
-        ViewCompat.setOnApplyWindowInsetsListener(requireView().findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(requireView().findViewById(R.id.mainHome)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
@@ -71,8 +76,8 @@ class HomeFragment : Fragment() {
                     }
                     if (items.isNotEmpty()) {
                         binding.recyclerViewPopular.layoutManager =
-                            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                        binding.recyclerViewPopular.adapter = PopularAdapter(items)
+                            GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+                        binding.recyclerViewPopular.adapter = ProductAdapter(items, false)
                     }
                     binding.progressBarPopular.visibility = View.GONE
                 }

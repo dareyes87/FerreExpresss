@@ -13,7 +13,7 @@ import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.ViewholderProductBinding
 
-class ProductAdapter(private val productList: List<itemsDomain>) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+class ProductAdapter(private val productList: ArrayList<itemsDomain>, private val isSeller: Boolean) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
     private lateinit var context: Context
 
@@ -28,7 +28,7 @@ class ProductAdapter(private val productList: List<itemsDomain>) : RecyclerView.
 
             if (product.picUrl.isNotEmpty()) {
                 Glide.with(context)
-                    .load(product.picUrl[0])
+                    .load(product.picUrl.get(0))
                     .apply(requestOptions)
                     .into(binding.productImage)
             } else {
@@ -39,6 +39,7 @@ class ProductAdapter(private val productList: List<itemsDomain>) : RecyclerView.
             binding.root.setOnClickListener {
                 val intent = Intent(context, DetailActivity::class.java)
                 intent.putExtra("object", product)
+                intent.putExtra("isSeller", isSeller)
                 context.startActivity(intent)
             }
         }

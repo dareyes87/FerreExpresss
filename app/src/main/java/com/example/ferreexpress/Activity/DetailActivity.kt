@@ -2,6 +2,7 @@ package com.example.ferreexpress.Activity
 
 import android.os.Bundle
 import android.os.Handler
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -28,6 +29,12 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val isSeller = intent.getBooleanExtra("isSeller", false)
+        if (isSeller) {
+            // Si es vendedor, oculta el botón
+            binding.addTocartBtn.visibility = View.GONE
+        }
 
         managmentCart = ManagmentCart(this)
         getBundles();
