@@ -4,6 +4,7 @@ import java.io.Serializable
 
 public class itemsDomain(
     public var title: String = "",
+    public var category: String = "",
     public var description: String = "",
     public var picUrl: ArrayList<String> = ArrayList(),
     public var price: Double = 0.0,

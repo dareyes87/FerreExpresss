@@ -103,7 +103,7 @@ class HomeFragment : Fragment() {
                     if (items.isNotEmpty()) {
                         binding.recyclerViewCategory.layoutManager =
                             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                        binding.recyclerViewCategory.adapter = CategoryAdapter(items)
+                        binding.recyclerViewCategory.adapter = CategoryAdapter(items, this@HomeFragment)
                     }
                     binding.progressBarCategory.visibility = View.GONE
                 }

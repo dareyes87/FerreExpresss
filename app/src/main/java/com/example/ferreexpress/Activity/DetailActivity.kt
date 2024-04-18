@@ -30,10 +30,19 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //Cosas ocultas por default
+        binding.deleteBtn.visibility = View.GONE
+        binding.editBtn.visibility = View.GONE
+
         val isSeller = intent.getBooleanExtra("isSeller", false)
         if (isSeller) {
-            // Si es vendedor, oculta el botón
+            // Si es vendedor, ocultar lo siguiente
             binding.addTocartBtn.visibility = View.GONE
+            binding.favBtn.visibility = View.GONE
+
+            //Si es vendedor, agregar lo siguiente
+            binding.deleteBtn.visibility = View.VISIBLE
+            binding.editBtn.visibility = View.VISIBLE
         }
 
         managmentCart = ManagmentCart(this)
