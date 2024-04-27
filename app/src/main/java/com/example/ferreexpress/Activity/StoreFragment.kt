@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.ferreexpress.Adapter.ProductAdapter
 import com.example.ferreexpress.Domain.itemsDomain
+import com.example.ferreexpress.Helper.ItemsRepository
 import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.FragmentStoreBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -42,12 +43,14 @@ class StoreFragment : Fragment() {
     }
 
     private fun initUI(){
+        // Configura la pantalla para que utilice la barra de estado transparente
         val w: Window = requireActivity().window
         w.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
 
+        // Aplica los márgenes según los cambios en la barra de estado
         ViewCompat.setOnApplyWindowInsetsListener(requireView().findViewById(R.id.mainStore)){ v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -66,19 +69,30 @@ class StoreFragment : Fragment() {
         }
     }
 
-
     private fun initProduct(){
+        // Obtiene una referencia a la base de datos de Firebase
         val myRef: DatabaseReference = database.reference.child("Users").child("UserID_1").child("products")
+        // Muestra la barra de progreso mientras se cargan los productos
         binding.progressBarStore.visibility = View.VISIBLE
         val items: ArrayList<itemsDomain> = ArrayList()
+        var keyItem: String
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
+                    // Itera sobre los productos obtenidos de la base de datos
                     for (issue in snapshot.children) {
+                        val keyItem = issue.key.toString() // Obtiene la clave del elemento actual
                         val itemsDomain = issue.getValue(itemsDomain::class.java)
-                        itemsDomain?.let { items.add(it) }
+
+                        // Verifica si itemsDomain no es nulo y luego asigna la clave al campo id
+                        itemsDomain?.let {
+                            it.keyProduct = keyItem
+                            items.add(it)
+                        }
                     }
+
                     if (items.isNotEmpty()) {
+                        val repository = ItemsRepository()
                         binding.recyclerMyStore.layoutManager =
                             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
                         binding.recyclerMyStore.adapter = ProductAdapter(items, true)
@@ -86,7 +100,6 @@ class StoreFragment : Fragment() {
                     binding.progressBarStore.visibility = View.GONE
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
                 // Handle error
             }

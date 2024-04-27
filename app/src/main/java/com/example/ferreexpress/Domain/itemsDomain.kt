@@ -3,6 +3,7 @@ package com.example.ferreexpress.Domain
 import java.io.Serializable
 
 public class itemsDomain(
+    public var keyProduct: String = "",
     public var title: String = "",
     public var category: String = "",
     public var description: String = "",

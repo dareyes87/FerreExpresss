@@ -20,6 +20,7 @@ import com.example.ferreexpress.Adapter.SliderAdapter
 import com.example.ferreexpress.Domain.CategoryDomain
 import com.example.ferreexpress.Domain.SliderItems
 import com.example.ferreexpress.Domain.itemsDomain
+import com.example.ferreexpress.Helper.ItemsRepository
 import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.FragmentHomeBinding
 import com.google.firebase.database.DataSnapshot
@@ -75,6 +76,7 @@ class HomeFragment : Fragment() {
                         itemsDomain?.let { items.add(it) }
                     }
                     if (items.isNotEmpty()) {
+                        val repository = ItemsRepository()
                         binding.recyclerViewPopular.layoutManager =
                             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
                         binding.recyclerViewPopular.adapter = ProductAdapter(items, false)

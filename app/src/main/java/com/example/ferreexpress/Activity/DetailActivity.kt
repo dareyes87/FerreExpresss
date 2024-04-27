@@ -1,8 +1,11 @@
 package com.example.ferreexpress.Activity
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -16,6 +19,9 @@ import com.example.ferreexpress.Fragment.ReviewFragment
 import com.example.ferreexpress.Fragment.SoldFragment
 import com.example.ferreexpress.Helper.ManagmentCart
 import com.example.ferreexpress.databinding.ActivityDetailBinding
+import com.google.firebase.Firebase
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.database
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
@@ -23,6 +29,7 @@ class DetailActivity : AppCompatActivity() {
     private var numberOrder: Int = 1
     private lateinit var managmentCart: ManagmentCart
     private val slideHandler: Handler = Handler()
+    private lateinit var databaseReference: DatabaseReference
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +41,7 @@ class DetailActivity : AppCompatActivity() {
         binding.deleteBtn.visibility = View.GONE
         binding.editBtn.visibility = View.GONE
 
+        var key = intent.getStringExtra("keyProduct")
         val isSeller = intent.getBooleanExtra("isSeller", false)
         if (isSeller) {
             // Si es vendedor, ocultar lo siguiente
@@ -45,11 +53,74 @@ class DetailActivity : AppCompatActivity() {
             binding.editBtn.visibility = View.VISIBLE
         }
 
+        binding.deleteBtn.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Confirmar")
+            builder.setMessage("¿Estás seguro de que deseas eliminar este producto?")
+            builder.setPositiveButton("Sí") { dialog, which ->
+                // Elimina el producto de la base de datos
+                // Aquí deberías agregar tu lógica para eliminar el producto
+                // Por ejemplo, llamar a una función para eliminar el producto de la base de datos
+                deleteProduct(key.toString())
+
+                Toast.makeText(
+                    this,
+                    key.toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                // Después de eliminar, puedes cerrar esta actividad o realizar otras acciones necesarias
+                finish()
+            }
+            builder.setNegativeButton("Cancelar") { dialog, which ->
+                // Si el usuario cancela, simplemente cierra el diálogo
+                dialog.dismiss()
+            }
+            builder.show()
+        }
+
+        binding.editBtn.setOnClickListener{
+            val intent = Intent(this, AddProductActivity::class.java)
+            intent.putExtra("isEdit", true)
+            startActivity(intent)
+        }
+
         managmentCart = ManagmentCart(this)
         getBundles();
         banners()
         setupViewPager()
     }
+
+    fun editProduct(productId: String){
+
+    }
+
+    fun deleteProduct(productId: String) {
+        val database = Firebase.database
+        val usersRef = database.getReference("Users")
+
+        // Suponiendo que tengas el ID del usuario y el ID del producto
+        val userId = "UserID_1"
+        val productIdToDelete = productId
+
+        // Referencia al producto que deseas eliminar
+        val productRef = usersRef.child(userId).child("products").child(productIdToDelete)
+
+        // Eliminar el producto de la base de datos
+        productRef.removeValue()
+            .addOnSuccessListener {
+                Toast.makeText(
+                    this,
+                    "Producto eliminado correctamente",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Error al eliminar el producto", Toast.LENGTH_SHORT)
+                    .show()
+            }
+    }
+
 
     private fun banners() {
         //Posibles problemas
@@ -92,6 +163,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun getBundles() {
+
         item = intent.getSerializableExtra("object") as? itemsDomain ?: return
         binding.titleTxt.text = item.title
         binding.priceTxt.text = "$"+item.price

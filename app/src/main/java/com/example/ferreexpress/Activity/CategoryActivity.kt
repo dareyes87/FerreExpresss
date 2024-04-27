@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.ferreexpress.Adapter.ProductAdapter
 import com.example.ferreexpress.Domain.itemsDomain
+import com.example.ferreexpress.Helper.ItemsRepository
 import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.ActivityCategoryBinding
 import com.google.firebase.database.DataSnapshot
@@ -65,6 +66,7 @@ class CategoryActivity : AppCompatActivity() {
                         }
                     }
                     if (items.isNotEmpty()) {
+                        val repository = ItemsRepository()
                         binding.recyclerSelectCategory.layoutManager =
                             GridLayoutManager(this@CategoryActivity, 2, GridLayoutManager.VERTICAL, false)
                         binding.recyclerSelectCategory.adapter = ProductAdapter(items, false)
