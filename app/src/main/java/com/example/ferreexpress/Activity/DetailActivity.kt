@@ -59,8 +59,6 @@ class DetailActivity : AppCompatActivity() {
             builder.setMessage("¿Estás seguro de que deseas eliminar este producto?")
             builder.setPositiveButton("Sí") { dialog, which ->
                 // Elimina el producto de la base de datos
-                // Aquí deberías agregar tu lógica para eliminar el producto
-                // Por ejemplo, llamar a una función para eliminar el producto de la base de datos
                 deleteProduct(key.toString())
 
                 Toast.makeText(
@@ -82,6 +80,8 @@ class DetailActivity : AppCompatActivity() {
         binding.editBtn.setOnClickListener{
             val intent = Intent(this, AddProductActivity::class.java)
             intent.putExtra("isEdit", true)
+            intent.putExtra("keyProduct", key)
+            intent.putExtra("object", item)
             startActivity(intent)
         }
 
@@ -89,10 +89,6 @@ class DetailActivity : AppCompatActivity() {
         getBundles();
         banners()
         setupViewPager()
-    }
-
-    fun editProduct(productId: String){
-
     }
 
     fun deleteProduct(productId: String) {
@@ -120,7 +116,6 @@ class DetailActivity : AppCompatActivity() {
                     .show()
             }
     }
-
 
     private fun banners() {
         //Posibles problemas
