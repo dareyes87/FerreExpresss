@@ -31,7 +31,6 @@ class DetailActivity : AppCompatActivity() {
     private val slideHandler: Handler = Handler()
     private lateinit var databaseReference: DatabaseReference
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -118,7 +117,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun banners() {
-        //Posibles problemas
+        //MOSTRAR LAS IMAGENES DE LOS PRODUCTOS EN UN SLIDER
         var sliderItems = ArrayList<SliderItems>()
 
         for (i in item.picUrl.indices) {

@@ -55,5 +55,5 @@
         app:layout_constraintBottom_toBottomOf="@+id/ratingTxt"
         app:layout_constraintEnd_toStartOf="@+id/ratingTxt"
         app:layout_constraintTop_toTopOf="@+id/ratingTxt"
-        app:srcCompat="@drawable/shoppingwhite" />
+        app:srcCompat="@drawable/estrella" />
 </androidx.constraintlayout.widget.ConstraintLayout>

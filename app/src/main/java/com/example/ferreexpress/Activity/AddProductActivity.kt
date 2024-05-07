@@ -145,10 +145,18 @@ class AddProductActivity : AppCompatActivity() {
                         }
                     }
 
+                    //DATOS INICIALES DEL PRODUCTO
+                    val oldPrice: Double = price
+                    val review: Int = 0
+                    val rating: Double = 5.0
+
                     //Objeto del Producto
                     val newProduct = mapOf(
                         "title" to tite,
                         "price" to price,
+                        "oldPrice" to oldPrice,
+                        "review" to review,
+                        "rating" to rating,
                         "category" to category,
                         "description" to descripcion,
                         "picUrl" to downloadUrls

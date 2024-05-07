@@ -12,5 +12,6 @@ public class itemsDomain(
     public var oldPrice: Double = 0.0,
     public var review: Int = 0,
     public var rating: Double = 0.0,
-    public var numberinCart: Int = 0
+    public var numberinCart: Int = 0,
+    public var reviews: ArrayList<ReviewDomain> = ArrayList()
 ) : Serializable

@@ -24,13 +24,13 @@ class ProductAdapter(private val productList: ArrayList<itemsDomain>, private va
     inner class ViewHolder(private val binding: ViewholderProductBinding) : RecyclerView.ViewHolder(binding.root) {
         // Función para asignar datos a las vistas del ViewHolder
         fun bind(product: itemsDomain) {
-            // Asigna los datos del producto a las vistas correspondientes
 
-
+            //VISTA DE LA INFO DEL PRODUCTO, SU NOMBRE, PRECIO ETC
             binding.textName.text = product.title
             binding.reviews.text = "" + product.review
             binding.price.text = "Q" + product.price
             binding.rating.text = "(" + product.rating + ")"
+            binding.ratingBarProduct.rating = product.rating.toFloat()
 
             // Configuración de opciones de carga de imágenes con Glide
             val requestOptions = RequestOptions().transform(CenterCrop())
