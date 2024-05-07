@@ -6,4 +6,6 @@
     <color name="LightGray">#EFEFEF</color>
     <color name="grey">#d2d2d2</color>
     <color name="DarkGrey">#616161</color>
+    <color name="AzulOscuro">#192B35</color>
+
 </resources>

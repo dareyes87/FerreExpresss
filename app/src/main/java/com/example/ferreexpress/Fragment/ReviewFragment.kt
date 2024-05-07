@@ -1,5 +1,6 @@
 package com.example.ferreexpress.Fragment
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ferreexpress.Adapter.ReviewAdapter
+import com.example.ferreexpress.Adapter.ReviewDialogAdapter
 import com.example.ferreexpress.Domain.ReviewDomain
 import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.R
@@ -39,7 +41,10 @@ class ReviewFragment : Fragment() {
 
         val pushReview: FloatingActionButton = view.findViewById(R.id.floatingButtonReview)
         pushReview.setOnClickListener{
-
+            //MOSTRAR EL DIALOGO PARA PUBLICAR UN COMENTARIO
+            val dialog = ReviewDialogAdapter(requireContext())
+            dialog.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(android.R.color.transparent)))
+            dialog.show()
         }
 
     }
