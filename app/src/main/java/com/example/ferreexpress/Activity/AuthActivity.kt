@@ -44,13 +44,7 @@ class AuthActivity : AppCompatActivity() {
             insets
         }
 
-
-
     }
-
-
-
-
 
     private fun setup(){
         title = "Autenticacion"
@@ -85,6 +79,8 @@ class AuthActivity : AppCompatActivity() {
             }
         }
 
+        //AQUI PROGRAMAR EL BOTON DE GOOGLE
+
     }
 
     private fun showAlert(){
@@ -101,9 +97,8 @@ class AuthActivity : AppCompatActivity() {
         }
         startActivity(homeIntent)
     }
-    private fun PruebaDosGit(){
-        //Esta es la segunda prueba para el manejo de git
-    }
+
+    //FUNCION ON ACTIVITY RESOURCE
 
     private fun ComprobarSesion(){
         firebaseUser = FirebaseAuth.getInstance().currentUser
@@ -118,10 +113,6 @@ class AuthActivity : AppCompatActivity() {
     override fun onStart() {
         ComprobarSesion()
         super.onStart()
-    }
-
-    private fun PruebaGitDosDos(){
-        //Una funcion vacia
     }
 
 }
