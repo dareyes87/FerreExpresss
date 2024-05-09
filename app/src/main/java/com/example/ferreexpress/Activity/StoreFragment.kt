@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.example.ferreexpress.Adapter.ProductAdapter
 import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.Helper.ItemsRepository
@@ -58,6 +60,7 @@ class StoreFragment : Fragment() {
         }
         floatButtom()
         initProduct()
+        initInfoNegocio()
     }
 
     private fun floatButtom(){
@@ -106,5 +109,50 @@ class StoreFragment : Fragment() {
         })
     }
 
+    private fun initInfoNegocio() {
+        // Obtiene una referencia a la base de datos de Firebase para el usuario 1
+        val userRef: DatabaseReference = database.reference.child("Users").child("UserID_1")
+
+        // Agrega un listener para leer los datos del usuario
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    // Aquí puedes leer los datos del usuario y hacer lo que necesites con ellos
+                    val name = snapshot.child("name").getValue(String::class.java)
+                    val description = snapshot.child("descriptionN").getValue(String::class.java)
+                    val followersCount = snapshot.child("seguidores").childrenCount // Obtiene el número de seguidores
+                    val ratingSnapshot = snapshot.child("rating")
+                    var totalRating = 0.0
+                    var ratingCount = 0
+                    // Calcula el rating promedio
+                    for (rating in ratingSnapshot.children) {
+                        val valrating = rating.child("valrating").getValue(Double::class.java)
+                        if (valrating != null) {
+                            totalRating += valrating
+                            ratingCount++
+                        }
+                    }
+                    val averageRating = if (ratingCount > 0) totalRating / ratingCount else 0.0
+
+                    // Obtiene la URL de la imagen de perfil
+                    val picUrl = snapshot.child("picUser").getValue(String::class.java)
+
+                    //SE LLENAN LOS CAMPOS CON LA INFO
+                    binding.textViewNameNegocio.text = name.toString()
+                    binding.textViewDesNegocio.text = description.toString()
+                    binding.textViewSeguidores.text = followersCount.toString()
+                    binding.textViewRating.text = String.format("%.1f", averageRating)
+                    binding.ratingBarNegocio.rating = averageRating.toFloat()
+                    Glide.with(requireContext())
+                        .load(picUrl)
+                        .into(binding.imageViewNegocio)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Maneja el error si la lectura de datos se cancela
+            }
+        })
+    }
 
 }

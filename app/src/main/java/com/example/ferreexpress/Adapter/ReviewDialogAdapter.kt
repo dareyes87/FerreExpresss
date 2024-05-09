@@ -5,10 +5,14 @@ import android.content.Context
 import android.os.Bundle
 import android.view.animation.Animation
 import android.view.animation.ScaleAnimation
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RatingBar
 import androidx.annotation.NonNull
 import com.example.ferreexpress.R
+import com.google.firebase.Firebase
+import com.google.firebase.database.database
 
 class ReviewDialogAdapter(@NonNull context: Context) : Dialog(context) {
 
@@ -18,6 +22,7 @@ class ReviewDialogAdapter(@NonNull context: Context) : Dialog(context) {
 
         val ratingBar = findViewById<RatingBar>(R.id.ratingBarReview)
         val imageRatingBar = findViewById<ImageView>(R.id.ratingBarImage)
+        val btnPushReview = findViewById<Button>(R.id.publicarReviewBtn)
 
         ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
             when {
@@ -29,6 +34,12 @@ class ReviewDialogAdapter(@NonNull context: Context) : Dialog(context) {
             }
             animateImage(imageRatingBar)
         }
+
+        //PUBLICAR COMENTARIO DEL PRODUCTO
+        btnPushReview.setOnClickListener{
+
+        }
+
     }
 
     private fun animateImage(ratingImage: ImageView) {

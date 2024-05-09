@@ -20,6 +20,7 @@
             android:clickable="false"
             android:scrollbarAlwaysDrawHorizontalTrack="false"
             android:src="@drawable/ic_add"
+            app:backgroundTint="@color/AzulOscuro"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -38,7 +39,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView23"
+                    android:id="@+id/textViewNameNegocio"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -53,7 +54,7 @@
                     android:layout_marginTop="16dp">
 
                     <RatingBar
-                        android:id="@+id/ratingBar"
+                        android:id="@+id/ratingBarNegocio"
                         style="@android:style/Widget.DeviceDefault.RatingBar.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -65,11 +66,11 @@
                         android:progressTint="#ffc106"
                         android:rating="3"
                         android:stepSize="0.1"
-                        app:layout_constraintStart_toEndOf="@+id/imageView11"
-                        app:layout_constraintTop_toBottomOf="@+id/textView18" />
+                        app:layout_constraintStart_toEndOf="@+id/imageViewNegocio"
+                        app:layout_constraintTop_toBottomOf="@+id/textViewSeguidores" />
 
                     <ImageView
-                        android:id="@+id/imageView11"
+                        android:id="@+id/imageViewNegocio"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
                         android:layout_marginStart="16dp"
@@ -79,23 +80,14 @@
                         tools:src="@tools:sample/avatars" />
 
                     <TextView
-                        android:id="@+id/textViewNameNegocio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:text="Ferreteria Aki"
-                        app:layout_constraintStart_toEndOf="@+id/imageView11"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textView18"
+                        android:id="@+id/textViewSeguidores"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="8dp"
                         android:text="0"
-                        app:layout_constraintStart_toEndOf="@+id/imageView11"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewNameNegocio" />
+                        app:layout_constraintStart_toEndOf="@+id/imageViewNegocio"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
                         android:id="@+id/textView20"
@@ -104,39 +96,41 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:text="Seguidores"
-                        app:layout_constraintStart_toEndOf="@+id/textView18"
-                        app:layout_constraintTop_toBottomOf="@+id/textViewNameNegocio" />
+                        app:layout_constraintStart_toEndOf="@+id/textViewSeguidores"
+                        app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
-                        android:id="@+id/textView24"
+                        android:id="@+id/textViewRating"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="0"
                         android:textSize="12sp"
-                        app:layout_constraintStart_toEndOf="@+id/ratingBar"
-                        app:layout_constraintTop_toTopOf="@+id/ratingBar" />
+                        app:layout_constraintBottom_toBottomOf="@+id/ratingBarNegocio"
+                        app:layout_constraintStart_toEndOf="@+id/ratingBarNegocio"
+                        app:layout_constraintTop_toTopOf="@+id/ratingBarNegocio" />
 
                     <TextView
-                        android:id="@+id/textView25"
+                        android:id="@+id/textViewReviewNeg"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="16dp"
                         android:text="(0 opiniones)"
                         android:textSize="12sp"
-                        app:layout_constraintStart_toEndOf="@+id/textView24"
-                        app:layout_constraintTop_toTopOf="@+id/textView24" />
+                        app:layout_constraintBottom_toBottomOf="@+id/ratingBarNegocio"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/ratingBarNegocio" />
 
                     <TextView
-                        android:id="@+id/textView26"
+                        android:id="@+id/textViewDesNegocio"
                         android:layout_width="200dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="16dp"
                         android:text="Aqui va a ir la descripcion del negocio etc etc"
                         android:textSize="13sp"
-                        app:layout_constraintStart_toEndOf="@+id/imageView11"
-                        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageViewNegocio"
+                        app:layout_constraintTop_toBottomOf="@+id/ratingBarNegocio" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

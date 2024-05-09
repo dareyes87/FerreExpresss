@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -86,15 +87,16 @@
                 android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/publicarReviewBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:background="@drawable/backrounf_blueblack"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:text="Publicar Comentario"
-                    android:textStyle="bold"
                     android:textAlignment="center"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
