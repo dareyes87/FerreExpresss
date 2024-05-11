@@ -16,38 +16,34 @@ import com.example.ferreexpress.Domain.ReviewDomain
 import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.databinding.ViewholderReviewBinding
 
-class ReviewAdapter(private val items: ArrayList<ReviewDomain>): RecyclerView.Adapter<ReviewAdapter.Viewholder>() {
+class ReviewAdapter(private val context: Context, private val items: List<ReviewDomain>): RecyclerView.Adapter<ReviewAdapter.Viewholder>() {
 
-    private lateinit var context: Context
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReviewAdapter.Viewholder {
-        context = parent.context
-        val binding = ViewholderReviewBinding.inflate(LayoutInflater.from(context), parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Viewholder {
+        val binding = ViewholderReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return Viewholder(binding)
     }
 
-    override fun onBindViewHolder(holder: ReviewAdapter.Viewholder, position: Int) {
-        holder.bind(items[position])
+    override fun onBindViewHolder(holder: Viewholder, position: Int) {
+        val review = items[position]
+        holder.bind(review)
     }
 
     override fun getItemCount(): Int {
         return items.size
     }
 
-    inner class Viewholder(private val binding: ViewholderReviewBinding):
-        RecyclerView.ViewHolder(binding.root){
+    inner class Viewholder(private val binding: ViewholderReviewBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(review: ReviewDomain){
-            binding.nameTxt.text = items.get(position).Name
-            binding.descTxt.text = items.get(position).Description
-            binding.ratingTxt.text = ""+items.get(position).rating
+        fun bind(review: ReviewDomain) {
+            binding.nameTxt.text = review.nameUser
+            binding.descTxt.text = review.comentary
+            binding.ratingTxt.text = review.rating.toString()
 
             Glide.with(context)
-                .load(items.get(position).PicUrl)
+                .load(review.PicUrl)
                 .transform(GranularRoundedCorners(100F, 100F, 100F, 100F))
                 .into(binding.pic)
         }
-
     }
 
 }

@@ -87,7 +87,7 @@ class DetailActivity : AppCompatActivity() {
         managmentCart = ManagmentCart(this)
         getBundles();
         banners()
-        setupViewPager()
+        setupViewPager(key.toString())
     }
 
     fun deleteProduct(productId: String) {
@@ -132,10 +132,10 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
-    private fun setupViewPager(){
+    private fun setupViewPager(key: String){
         val adapter = ViewPagerAdapter(supportFragmentManager)
         val tab1: DescriptionFragment = DescriptionFragment()
-        val tab2: ReviewFragment = ReviewFragment()
+        val tab2: ReviewFragment = ReviewFragment(item.reviews)
         val tab3: SoldFragment = SoldFragment()
 
         val bundle1: Bundle = Bundle()
@@ -153,7 +153,6 @@ class DetailActivity : AppCompatActivity() {
 
         binding.viewpager.adapter = adapter
         binding.tablayout.setupWithViewPager(binding.viewpager)
-
     }
 
     private fun getBundles() {

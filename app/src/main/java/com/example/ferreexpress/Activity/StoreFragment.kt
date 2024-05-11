@@ -7,13 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.ferreexpress.Adapter.ProductAdapter
+import com.example.ferreexpress.Domain.ReviewDomain
 import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.Helper.ItemsRepository
 import com.example.ferreexpress.R
@@ -68,30 +68,71 @@ class StoreFragment : Fragment() {
         fab.setOnClickListener{
             val intent = Intent(requireContext(), AddProductActivity::class.java)
             startActivity(intent)
-
         }
     }
 
-    private fun initProduct(){
+    private fun initProduct() {
         // Obtiene una referencia a la base de datos de Firebase
         val myRef: DatabaseReference = database.reference.child("Users").child("UserID_1").child("products")
+
         // Muestra la barra de progreso mientras se cargan los productos
         binding.progressBarStore.visibility = View.VISIBLE
+
         val items: ArrayList<itemsDomain> = ArrayList()
-        var keyItem: String
+
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    // Itera sobre los productos obtenidos de la base de datos
                     for (issue in snapshot.children) {
-                        val keyItem = issue.key.toString() // Obtiene la clave del elemento actual
-                        val itemsDomain = issue.getValue(itemsDomain::class.java)
+                        val keyItem = issue.key.toString()
+                        val itemData = issue.value as HashMap<*, *> // Cast a HashMap
 
-                        // Verifica si itemsDomain no es nulo y luego asigna la clave al campo id
-                        itemsDomain?.let {
-                            it.keyProduct = keyItem
-                            items.add(it)
+                        val title = itemData["title"] as String
+                        val category = itemData["category"] as String
+                        val description = itemData["description"] as String
+                        val price = (itemData["price"] as Number?)?.toDouble() ?: 0.0
+                        val oldPrice = (itemData["oldPrice"] as Number?)?.toDouble() ?: 0.0
+
+                        // Cambio de nombre de la variable review a reviewCount
+                        val reviewCount = (itemData["review"] as Long?)?.toInt() ?: 0 // Convertimos Long a Int y manejamos el valor nulo
+                        val rating = (itemData["rating"] as Number?)?.toDouble() ?: 0.0
+                        val numberinCart = (itemData["numberinCart"] as Long?)?.toInt() ?: 0
+
+                        // Si los campos son de tipo ArrayList en tu objeto itemsDomain, asegúrate de manejarlos correctamente.
+                        val picUrlList = itemData["picUrl"] as ArrayList<String>? ?: ArrayList()
+                        val reviewsList = itemData["reviews"] as HashMap<String, Any>? ?: HashMap()
+
+                        val reviews: ArrayList<ReviewDomain> = ArrayList()
+
+                        // Iteramos sobre cada elemento del HashMap de reviews
+                        for ((_, reviewData) in reviewsList) {
+                            // Extraemos los datos de la revisión del HashMap
+                            if (reviewData is HashMap<*, *>) {
+                                val nameUser = reviewData["nameUser"] as String
+                                val comentary = reviewData["comentary"] as String
+                                val rating = (reviewData["rating"] as Double?) ?: 0.0
+
+                                // ReviewDomain lo agregamos al ArrayList de revisiones
+                                val review = ReviewDomain(nameUser, comentary, "", rating)
+                                reviews.add(review)
+                            }
                         }
+
+                        // El ArrayList de revisiones al constructor de itemsDomain
+                        val item = itemsDomain(
+                            keyItem,
+                            title,
+                            category,
+                            description,
+                            picUrlList,
+                            price,
+                            oldPrice,
+                            reviewCount, // Cambio aquí
+                            rating,
+                            numberinCart,
+                            reviews // Cambio aquí
+                        )
+                        items.add(item)
                     }
 
                     if (items.isNotEmpty()) {
@@ -103,11 +144,13 @@ class StoreFragment : Fragment() {
                     binding.progressBarStore.visibility = View.GONE
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {
                 // Handle error
             }
         })
     }
+
 
     private fun initInfoNegocio() {
         // Obtiene una referencia a la base de datos de Firebase para el usuario 1
@@ -148,11 +191,9 @@ class StoreFragment : Fragment() {
                         .into(binding.imageViewNegocio)
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
                 // Maneja el error si la lectura de datos se cancela
             }
         })
     }
-
 }
