@@ -136,7 +136,6 @@ class StoreFragment : Fragment() {
                     }
 
                     if (items.isNotEmpty()) {
-                        val repository = ItemsRepository()
                         binding.recyclerMyStore.layoutManager =
                             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
                         binding.recyclerMyStore.adapter = ProductAdapter(items, true)
