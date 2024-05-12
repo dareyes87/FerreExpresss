@@ -78,6 +78,7 @@ class StoreFragment : Fragment() {
         // Muestra la barra de progreso mientras se cargan los productos
         binding.progressBarStore.visibility = View.VISIBLE
 
+        //Constructor de los productos
         val items: ArrayList<itemsDomain> = ArrayList()
 
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
