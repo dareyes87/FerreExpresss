@@ -61,35 +61,51 @@ class HomeFragment : Fragment() {
 
         initBanner()
         initCategory()
-        initPopular()
+        //initPopular()
     }
 
     private fun initPopular() {
-        val myRef: DatabaseReference = database.getReference("Items")
+        //Obtiene una referencia a la base de datos
+        val myRef: DatabaseReference = database.reference.child("Users")
         binding.progressBarPopular.visibility = View.VISIBLE
-        val items: ArrayList<itemsDomain> = ArrayList()
+        val popularItems: ArrayList<itemsDomain> = ArrayList()
+
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()) {
-                    for (issue in snapshot.children) {
-                        val itemsDomain = issue.getValue(itemsDomain::class.java)
-                        itemsDomain?.let { items.add(it) }
+            override fun onDataChange(usersSnapshot: DataSnapshot) {
+                if (usersSnapshot.exists()) {
+                    for (userSnapshot in usersSnapshot.children) {
+                        val productsRef = userSnapshot.child("products")
+
+                        // Recorre los productos de cada usuario
+                        for (productSnapshot in productsRef.children) {
+                            val product = productSnapshot.getValue(itemsDomain::class.java)
+
+                            // Verifica si el producto tiene una calificación de 4.0 o superior
+                            product?.let {
+                                if (it.rating >= 4.0) {
+                                    popularItems.add(it)
+                                }
+                            }
+                        }
                     }
-                    if (items.isNotEmpty()) {
-                        val repository = ItemsRepository()
+
+                    if (popularItems.isNotEmpty()) {
+                        // Mostrar los productos populares en el RecyclerView
                         binding.recyclerViewPopular.layoutManager =
                             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
-                        binding.recyclerViewPopular.adapter = ProductAdapter(items, false)
+                        binding.recyclerViewPopular.adapter = ProductAdapter(popularItems, false)
                     }
                     binding.progressBarPopular.visibility = View.GONE
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Handle error
+                // Manejar el error
             }
         })
     }
+
+
 
     private fun initCategory() {
         val myRef: DatabaseReference = database.getReference("Category")

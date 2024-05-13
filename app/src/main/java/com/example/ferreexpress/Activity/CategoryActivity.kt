@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.ferreexpress.Adapter.ProductAdapter
 import com.example.ferreexpress.Domain.ReviewDomain
 import com.example.ferreexpress.Domain.itemsDomain
-import com.example.ferreexpress.Helper.ItemsRepository
 import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.ActivityCategoryBinding
 import com.google.firebase.database.DataSnapshot
@@ -19,10 +18,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.util.Locale
+import android.text.Editable
+import android.text.TextWatcher
 
 class CategoryActivity : AppCompatActivity() {
-    var database:FirebaseDatabase = FirebaseDatabase.getInstance()
+    private lateinit var database: FirebaseDatabase
     private lateinit var binding: ActivityCategoryBinding
+    private lateinit var allProducts: ArrayList<itemsDomain>
 
     companion object {
         const val CATEGORY_EXTRA = "category_extra"
@@ -30,23 +33,59 @@ class CategoryActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //Infla el layout de la actividad
         binding = ActivityCategoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var w: Window = window
+        //Inicializa la instancia de Firebase
+        database = FirebaseDatabase.getInstance()
+
+        //Configura la ventana para que la barra de estado y navegacion sean transparentes
+        val w: Window = window
         w.setFlags(
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 
+        // Configura el relleno para el contenido principal para evitar que se superponga con la barra de estado y de navegación
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        //Obtiene la categoria seleccionada de la actividad anterior
         val category = intent.getStringExtra(CATEGORY_EXTRA)
         category?.let { initProducts(it) }
 
+        //Agrega un TextWatcher al EditText para filtrar los productos mientras el usuario escribe
+        binding.editTextBuscar.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // No es necesario implementar esta función
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // No es necesario implementar esta función
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // Filtrar productos según el texto ingresado por el usuario
+                val searchText = s.toString().toLowerCase(Locale.getDefault())
+                val filteredProducts = ArrayList<itemsDomain>()
+
+                for (product in allProducts) {
+                    if (product.title.toLowerCase(Locale.getDefault()).contains(searchText)) {
+                        filteredProducts.add(product)
+                    }
+                }
+
+                // Actualizar el RecyclerView con los productos filtrados
+                (binding.recyclerSelectCategory.adapter as ProductAdapter).apply {
+                    setItems(filteredProducts)
+                    notifyDataSetChanged()
+                }
+            }
+        })
     }
 
     private fun initProducts(category: String){
@@ -58,6 +97,7 @@ class CategoryActivity : AppCompatActivity() {
 
         val items: ArrayList<itemsDomain> = ArrayList()
 
+        //Obtenemos los datos de la pase de datos
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
@@ -69,8 +109,9 @@ class CategoryActivity : AppCompatActivity() {
                             val keyItem = productSnapshot.key.toString()
                             val itemData = productSnapshot.value as HashMap<*, *> // Cast a HashMap
 
+                            //Obtenemos los detalles del producto
                             val title = itemData["title"] as String
-                            val productCategory = itemData["category"] as String // Cambio aquí
+                            val productCategory = itemData["category"] as String
                             val description = itemData["description"] as String
                             val price = (itemData["price"] as Number?)?.toDouble() ?: 0.0
                             val oldPrice = (itemData["oldPrice"] as Number?)?.toDouble() ?: 0.0
@@ -78,7 +119,7 @@ class CategoryActivity : AppCompatActivity() {
                             val rating = (itemData["rating"] as Number?)?.toDouble() ?: 0.0
                             val numberinCart = (itemData["numberinCart"] as Long?)?.toInt() ?: 0
 
-                            // Si los campos son de tipo ArrayList en tu objeto itemsDomain, asegúrate de manejarlos correctamente.
+                            // Obtiene la lista de URL de las imagenes del producto
                             val picUrlList = itemData["picUrl"] as ArrayList<String>? ?: ArrayList()
                             val reviewsList = itemData["reviews"] as HashMap<String, Any>? ?: HashMap()
 
@@ -86,23 +127,23 @@ class CategoryActivity : AppCompatActivity() {
 
                             // Iteramos sobre cada elemento del HashMap de reviews
                             for ((_, reviewData) in reviewsList) {
-                                // Extraemos los datos de la revisión del HashMap
+                                // Obtenemos los detalles de la revision
                                 if (reviewData is HashMap<*, *>) {
                                     val nameUser = reviewData["nameUser"] as String
                                     val comentary = reviewData["comentary"] as String
                                     val rating = (reviewData["rating"] as Double?) ?: 0.0
 
-                                    // ReviewDomain lo agregamos al ArrayList de revisiones
+                                    // Creamos un objeto ReviewDomain y lo agrega a la lista de Reviews
                                     val review = ReviewDomain(nameUser, comentary, "", rating)
                                     reviews.add(review)
                                 }
                             }
 
-                            // El ArrayList de revisiones al constructor de itemsDomain
+                            // Crea un objeto itemsDomain con los detalles del producto
                             val item = itemsDomain(
                                 keyItem,
                                 title,
-                                productCategory, // Cambio aquí
+                                productCategory,
                                 description,
                                 picUrlList,
                                 price,
@@ -114,25 +155,28 @@ class CategoryActivity : AppCompatActivity() {
                             )
 
                             // Verificar si el producto pertenece a la categoría deseada
-                            if (productCategory == category) { // Cambio aquí
+                            if (productCategory == category) {
                                 items.add(item)
                             }
                         }
                     }
 
+                    //Guardamos todos los productos obtenidos
+                    allProducts = items
                     if (items.isNotEmpty()) {
+                        //Configura el RecyclerView para mostrar los productos
                         binding.recyclerSelectCategory.layoutManager =
                             GridLayoutManager(this@CategoryActivity, 2, GridLayoutManager.VERTICAL, false)
                         binding.recyclerSelectCategory.adapter = ProductAdapter(items, false)
                     }
+                    //Ocultamos la barra de progreso
                     binding.progressBarSelectCategory.visibility = View.GONE
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Manejar error
+                // Manejar error con la base de datos
             }
         })
     }
-
 }

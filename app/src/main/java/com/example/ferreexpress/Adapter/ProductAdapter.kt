@@ -14,7 +14,7 @@ import com.example.ferreexpress.Helper.OnProductClickListener
 import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.ViewholderProductBinding
 
-class ProductAdapter(private val productList: ArrayList<itemsDomain>, private val isSeller: Boolean) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+class ProductAdapter(private var productList: ArrayList<itemsDomain>, private val isSeller: Boolean) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
     private lateinit var context: Context
     private var productClickListener: OnProductClickListener? = null
@@ -72,6 +72,11 @@ class ProductAdapter(private val productList: ArrayList<itemsDomain>, private va
 
     override fun getItemCount(): Int {
         return productList.size
+    }
+
+    fun setItems(newItems: ArrayList<itemsDomain>) {
+        productList = newItems
+        notifyDataSetChanged()
     }
 
 }
