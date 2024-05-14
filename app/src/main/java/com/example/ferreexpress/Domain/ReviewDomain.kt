@@ -1,12 +1,10 @@
 package com.example.ferreexpress.Domain
 
-class ReviewDomain {
+import java.io.Serializable
 
-    var Name: String = ""
-    var Description: String = ""
-    var PicUrl: String = ""
+class ReviewDomain(
+    var nameUser: String = "",
+    var comentary: String = "",
+    var picUrl: String = "",
     var rating: Double = 0.0
-    var ItemId: Int = 0
-
-    constructor()
-}
+) : Serializable

@@ -14,7 +14,7 @@ import com.example.ferreexpress.Helper.OnProductClickListener
 import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.ViewholderProductBinding
 
-class ProductAdapter(private val productList: ArrayList<itemsDomain>, private val isSeller: Boolean) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+class ProductAdapter(private var productList: ArrayList<itemsDomain>, private val isSeller: Boolean) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
     private lateinit var context: Context
     private var productClickListener: OnProductClickListener? = null
@@ -24,13 +24,13 @@ class ProductAdapter(private val productList: ArrayList<itemsDomain>, private va
     inner class ViewHolder(private val binding: ViewholderProductBinding) : RecyclerView.ViewHolder(binding.root) {
         // Función para asignar datos a las vistas del ViewHolder
         fun bind(product: itemsDomain) {
-            // Asigna los datos del producto a las vistas correspondientes
 
-
+            //VISTA DE LA INFO DEL PRODUCTO, SU NOMBRE, PRECIO ETC
             binding.textName.text = product.title
             binding.reviews.text = "" + product.review
             binding.price.text = "Q" + product.price
             binding.rating.text = "(" + product.rating + ")"
+            binding.ratingBarProduct.rating = product.rating.toFloat()
 
             // Configuración de opciones de carga de imágenes con Glide
             val requestOptions = RequestOptions().transform(CenterCrop())
@@ -72,6 +72,11 @@ class ProductAdapter(private val productList: ArrayList<itemsDomain>, private va
 
     override fun getItemCount(): Int {
         return productList.size
+    }
+
+    fun setItems(newItems: ArrayList<itemsDomain>) {
+        productList = newItems
+        notifyDataSetChanged()
     }
 
 }

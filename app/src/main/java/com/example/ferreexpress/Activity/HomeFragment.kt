@@ -18,6 +18,7 @@ import com.example.ferreexpress.Adapter.CategoryAdapter
 import com.example.ferreexpress.Adapter.ProductAdapter
 import com.example.ferreexpress.Adapter.SliderAdapter
 import com.example.ferreexpress.Domain.CategoryDomain
+import com.example.ferreexpress.Domain.ReviewDomain
 import com.example.ferreexpress.Domain.SliderItems
 import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.Helper.ItemsRepository
@@ -32,6 +33,7 @@ import com.google.firebase.database.ValueEventListener
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    private lateinit var allProducts: ArrayList<itemsDomain>
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -65,18 +67,82 @@ class HomeFragment : Fragment() {
     }
 
     private fun initPopular() {
-        val myRef: DatabaseReference = database.getReference("Items")
+        //Obtiene una referencia a la base de datos
+        val myRef: DatabaseReference = database.reference.child("Users")
+
+        //Muestra la barra de progreso mientras se cargan los productos
         binding.progressBarPopular.visibility = View.VISIBLE
+
         val items: ArrayList<itemsDomain> = ArrayList()
+
+        //Obtenemos los datos de la base de datos
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    for (issue in snapshot.children) {
-                        val itemsDomain = issue.getValue(itemsDomain::class.java)
-                        itemsDomain?.let { items.add(it) }
+                    for (userSnapshot in snapshot.children) {
+                        val userProductsRef = userSnapshot.child("products")
+
+                        // Itera sobre cada producto del usuario
+                        for (productSnapshot in userProductsRef.children) {
+                            val keyItem = productSnapshot.key.toString()
+                            val itemData = productSnapshot.value as HashMap<*, *> // Cast a HashMap
+
+                            //Obtenemos los detalles del producto
+                            val title = itemData["title"] as String
+                            val productCategory = itemData["category"] as String
+                            val description = itemData["description"] as String
+                            val price = (itemData["price"] as Number?)?.toDouble() ?: 0.0
+                            val oldPrice = (itemData["oldPrice"] as Number?)?.toDouble() ?: 0.0
+                            val reviewCount = (itemData["review"] as Long?)?.toInt() ?: 0
+                            val rating = (itemData["rating"] as Number?)?.toDouble() ?: 0.0
+                            val numberinCart = (itemData["numberinCart"] as Long?)?.toInt() ?: 0
+
+                            // Obtiene la lista de URL de las imagenes del producto
+                            val picUrlList = itemData["picUrl"] as ArrayList<String>? ?: ArrayList()
+                            val reviewsList = itemData["reviews"] as HashMap<String, Any>? ?: HashMap()
+
+                            val reviews: ArrayList<ReviewDomain> = ArrayList()
+
+                            // Iteramos sobre cada elemento del HashMap de reviews
+                            for ((_, reviewData) in reviewsList) {
+                                // Obtenemos los detalles de la revision
+                                if (reviewData is HashMap<*, *>) {
+                                    val nameUser = reviewData["nameUser"] as String
+                                    val comentary = reviewData["comentary"] as String
+                                    val rating = (reviewData["rating"] as Double?) ?: 0.0
+
+                                    // Creamos un objeto ReviewDomain y lo agrega a la lista de Reviews
+                                    val review = ReviewDomain(nameUser, comentary, "", rating)
+                                    reviews.add(review)
+                                }
+                            }
+
+                            // Crea un objeto itemsDomain con los detalles del producto
+                            val item = itemsDomain(
+                                keyItem,
+                                title,
+                                productCategory,
+                                description,
+                                picUrlList,
+                                price,
+                                oldPrice,
+                                reviewCount,
+                                rating,
+                                numberinCart,
+                                reviews
+                            )
+
+                            // Verificar si el producto tiene una calificacion mayor a 4
+                            if (rating >= 4.0) {
+                                items.add(item)
+                            }
+                        }
                     }
+
+                    //Guardamos todos los productos obtenidos
+                    allProducts = items
                     if (items.isNotEmpty()) {
-                        val repository = ItemsRepository()
+                        // Mostrar los productos populares en el RecyclerView
                         binding.recyclerViewPopular.layoutManager =
                             GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
                         binding.recyclerViewPopular.adapter = ProductAdapter(items, false)
@@ -86,10 +152,12 @@ class HomeFragment : Fragment() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                // Handle error
+                // Manejar el error
             }
         })
     }
+
+
 
     private fun initCategory() {
         val myRef: DatabaseReference = database.getReference("Category")

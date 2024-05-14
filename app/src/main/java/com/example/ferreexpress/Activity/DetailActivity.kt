@@ -31,7 +31,6 @@ class DetailActivity : AppCompatActivity() {
     private val slideHandler: Handler = Handler()
     private lateinit var databaseReference: DatabaseReference
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
@@ -59,8 +58,6 @@ class DetailActivity : AppCompatActivity() {
             builder.setMessage("¿Estás seguro de que deseas eliminar este producto?")
             builder.setPositiveButton("Sí") { dialog, which ->
                 // Elimina el producto de la base de datos
-                // Aquí deberías agregar tu lógica para eliminar el producto
-                // Por ejemplo, llamar a una función para eliminar el producto de la base de datos
                 deleteProduct(key.toString())
 
                 Toast.makeText(
@@ -82,17 +79,15 @@ class DetailActivity : AppCompatActivity() {
         binding.editBtn.setOnClickListener{
             val intent = Intent(this, AddProductActivity::class.java)
             intent.putExtra("isEdit", true)
+            intent.putExtra("keyProduct", key)
+            intent.putExtra("object", item)
             startActivity(intent)
         }
 
         managmentCart = ManagmentCart(this)
         getBundles();
         banners()
-        setupViewPager()
-    }
-
-    fun editProduct(productId: String){
-
+        setupViewPager(key.toString())
     }
 
     fun deleteProduct(productId: String) {
@@ -121,9 +116,8 @@ class DetailActivity : AppCompatActivity() {
             }
     }
 
-
     private fun banners() {
-        //Posibles problemas
+        //MOSTRAR LAS IMAGENES DE LOS PRODUCTOS EN UN SLIDER
         var sliderItems = ArrayList<SliderItems>()
 
         for (i in item.picUrl.indices) {
@@ -138,32 +132,26 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
-    private fun setupViewPager(){
+    private fun setupViewPager(key: String){
         val adapter = ViewPagerAdapter(supportFragmentManager)
         val tab1: DescriptionFragment = DescriptionFragment()
-        val tab2: ReviewFragment = ReviewFragment()
-        val tab3: SoldFragment = SoldFragment()
+        val tab2: ReviewFragment = ReviewFragment(key.toString())
 
         val bundle1: Bundle = Bundle()
         val bundle2: Bundle = Bundle()
-        val bundle3: Bundle = Bundle()
 
         bundle1.putString("description", item.description)
         tab1.arguments = bundle1
         tab2.arguments = bundle2
-        tab3.arguments = bundle3
 
         adapter.addFrag(tab1, "Descriptions")
         adapter.addFrag(tab2, "Reviews")
-        adapter.addFrag(tab3, "Sold")
 
         binding.viewpager.adapter = adapter
         binding.tablayout.setupWithViewPager(binding.viewpager)
-
     }
 
     private fun getBundles() {
-
         item = intent.getSerializableExtra("object") as? itemsDomain ?: return
         binding.titleTxt.text = item.title
         binding.priceTxt.text = "$"+item.price
@@ -197,7 +185,6 @@ class DetailActivity : AppCompatActivity() {
         override fun getPageTitle(position: Int): CharSequence? {
             return mFragmentTitleList[position]
         }
-
     }
 
 }
