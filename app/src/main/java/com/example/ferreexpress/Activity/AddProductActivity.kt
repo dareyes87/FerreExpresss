@@ -2,18 +2,17 @@ package com.example.ferreexpress.Activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.NotificationManager
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ferreexpress.Adapter.ImageAdapter
@@ -26,14 +25,13 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.database
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.io.ByteArrayOutputStream
 import java.util.UUID
 
 class AddProductActivity : AppCompatActivity() {
-    private var imageUri: Uri? = null
-    private var images: MutableList<Uri> = mutableListOf()
+    private var images: MutableList<ByteArray> = mutableListOf()
     private var storageRef: StorageReference? = null
     private lateinit var binding: ActivityAddProductBinding
-    private lateinit var item: itemsDomain
     private val opciones = arrayOf(
         "Herramientas", "Tornillos", "Seguridad",
         "Herramientas Electricas", "Maquinaria Pesada", "Servicios"
@@ -52,7 +50,7 @@ class AddProductActivity : AppCompatActivity() {
         val isEdit = intent.getBooleanExtra("isEdit", false)
         var key = intent.getStringExtra("keyProduct")
 
-        //Configuracion del Spiner para la categoria del producto
+        //Configuracion del Spinner para la categoria del producto
         val spinner: Spinner = findViewById(R.id.spinnerCategory)
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, opciones)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -71,18 +69,22 @@ class AddProductActivity : AppCompatActivity() {
             binding.btnPushProduct.visibility = View.GONE
             binding.textView21.text = "Editar Producto"
             //Accion para agregar el nuevo producto
-
-                updateProduct(key.toString())
-
-
-        }else{
+            updateProduct(key.toString())
+        } else {
             pushProduct()
         }
 
         // Configura el RecyclerView para mostrar las imágenes seleccionadas
         val recyclerImage: RecyclerView = findViewById(R.id.recyclerImages)
         recyclerImage.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+    }
 
+    private fun uriToJPEGBytes(uri: Uri): ByteArray {
+        val inputStream = contentResolver.openInputStream(uri)
+        val bitmap = BitmapFactory.decodeStream(inputStream)
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 75, outputStream) // Ajusta la calidad según sea necesario
+        return outputStream.toByteArray()
     }
 
     fun pushProduct(){
@@ -104,17 +106,17 @@ class AddProductActivity : AppCompatActivity() {
                 "Publicando...",
                 Toast.LENGTH_SHORT
             ).show()
-            val tite = textTitle.text.toString()
+            val title = textTitle.text.toString()
             val price = textPrice.text.toString().toDoubleOrNull() ?: 0.00
             val category = spinnerCategory.selectedItem.toString()
-            val descripcion = textDescription.text.toString()
+            val description = textDescription.text.toString()
 
             val tasks: MutableList<Task<Uri>> = mutableListOf()
             // Itera sobre las imágenes seleccionadas para subirlas al almacenamiento de Firebase
-            for(imageUri in images){
-                val imageName = "image_" + UUID.randomUUID().toString()
+            for(imageBytes in images){
+                val imageName = "image_" + UUID.randomUUID().toString() + ".jpg"
                 val imageRef = storageRef?.child("images/$imageName")
-                val uploadTask = imageRef?.putFile(imageUri)
+                val uploadTask = imageRef?.putBytes(imageBytes)
                 uploadTask?.let { task ->
                     tasks.add(task.continueWithTask { task ->
                         if (!task.isSuccessful) {
@@ -152,13 +154,13 @@ class AddProductActivity : AppCompatActivity() {
 
                     //Objeto del Producto
                     val newProduct = mapOf(
-                        "title" to tite,
+                        "title" to title,
                         "price" to price,
                         "oldPrice" to oldPrice,
                         "review" to review,
                         "rating" to rating,
                         "category" to category,
-                        "description" to descripcion,
+                        "description" to description,
                         "picUrl" to downloadUrls
                     )
 
@@ -214,7 +216,7 @@ class AddProductActivity : AppCompatActivity() {
                         LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
                     existingProduct.picUrl?.let { picUrls ->
                         recyclerImage.adapter =
-                            ImageAdapter(picUrls.map { Uri.parse(it) }.toMutableList())
+                            ImageAdapter(images.map { BitmapFactory.decodeByteArray(it, 0, it.size) })
                     }
                 }
             }
@@ -223,17 +225,17 @@ class AddProductActivity : AppCompatActivity() {
         //BOTON PARA ACTUALIZAR EL PRODUCTO
         val buttonUpdateProduct: Button = findViewById(R.id.btnUpdateProduct)
         buttonUpdateProduct.setOnClickListener {
-        // Obtiene los nuevos valores del producto desde los campos de entrada
-        val newTitle = textTitle.text.toString()
-        val newPrice = textPrice.text.toString().toDoubleOrNull() ?: 0.00
-        val newCategory = spinnerCategory.selectedItem.toString()
-        val newDescription = textDescription.text.toString()
+            // Obtiene los nuevos valores del producto desde los campos de entrada
+            val newTitle = textTitle.text.toString()
+            val newPrice = textPrice.text.toString().toDoubleOrNull() ?: 0.00
+            val newCategory = spinnerCategory.selectedItem.toString()
+            val newDescription = textDescription.text.toString()
             val tasks: MutableList<Task<Uri>> = mutableListOf()
             // Itera sobre las imágenes seleccionadas para subirlas al almacenamiento de Firebase
-            for(imageUri in images){
-                val imageName = "image_" + UUID.randomUUID().toString()
+            for(imageBytes in images){
+                val imageName = "image_" + UUID.randomUUID().toString() + ".jpg"
                 val imageRef = storageRef?.child("images/$imageName")
-                val uploadTask = imageRef?.putFile(imageUri)
+                val uploadTask = imageRef?.putBytes(imageBytes)
                 uploadTask?.let { task ->
                     tasks.add(task.continueWithTask { task ->
                         if (!task.isSuccessful) {
@@ -293,7 +295,6 @@ class AddProductActivity : AppCompatActivity() {
         }
     }
 
-
     fun openImageSelector(){
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
@@ -308,15 +309,16 @@ class AddProductActivity : AppCompatActivity() {
             data?.clipData?.let { clipData ->
                 for (i in 0 until clipData.itemCount) {
                     val uri = clipData.getItemAt(i).uri
-                    this.images.add(uri)
+                    val imageBytes = uriToJPEGBytes(uri)
+                    this.images.add(imageBytes)
                 }
             } ?: data?.data?.let { uri ->
-                this.images.add(uri)
+                val imageBytes = uriToJPEGBytes(uri)
+                this.images.add(imageBytes)
             }
 
             val recyclerImage: RecyclerView = findViewById(R.id.recyclerImages)
-            recyclerImage.adapter = ImageAdapter(images)
+            recyclerImage.adapter = ImageAdapter(images.map { BitmapFactory.decodeByteArray(it, 0, it.size) }.toMutableList())
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package com.example.ferreexpress.Activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -48,6 +49,8 @@ class StoreFragment : Fragment() {
         // Configurar botón flotante
         binding.floatBtnAddProduct.setOnClickListener {
             // Agregar lógica para agregar un nuevo producto
+            val intent = Intent(requireContext(), AddProductActivity::class.java)
+            startActivity(intent)
         }
 
         // Inicializar productos
