@@ -13,8 +13,10 @@ import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.Helper.OnProductClickListener
 import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.ViewholderProductBinding
+import android.text.SpannableString
+import android.text.style.StrikethroughSpan
 
-class ProductAdapter(private var productList: ArrayList<itemsDomain>, private val isSeller: Boolean) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
+class ProductAdapter(private var productList: List<itemsDomain>, private val isSeller: Boolean) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
     private lateinit var context: Context
     private var productClickListener: OnProductClickListener? = null
@@ -31,6 +33,10 @@ class ProductAdapter(private var productList: ArrayList<itemsDomain>, private va
             binding.price.text = "Q" + product.price
             binding.rating.text = "(" + product.rating + ")"
             binding.ratingBarProduct.rating = product.rating.toFloat()
+            val oldPriceText = "Q" + product.oldPrice
+            val spannableString = SpannableString(oldPriceText)
+            spannableString.setSpan(StrikethroughSpan(), 0, oldPriceText.length, 0)
+            binding.txtoldPrice.text = spannableString
 
             // Configuración de opciones de carga de imágenes con Glide
             val requestOptions = RequestOptions().transform(CenterCrop())

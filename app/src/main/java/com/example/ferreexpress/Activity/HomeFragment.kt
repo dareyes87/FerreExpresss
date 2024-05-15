@@ -8,6 +8,7 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.size
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,6 +76,8 @@ class HomeFragment : Fragment() {
 
         val items: ArrayList<itemsDomain> = ArrayList()
 
+        var lastVisibleItem = 0
+
         //Obtenemos los datos de la base de datos
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -133,7 +136,7 @@ class HomeFragment : Fragment() {
                             )
 
                             // Verificar si el producto tiene una calificacion mayor a 4
-                            if (rating >= 4.0) {
+                            if (rating >= 1.0) {
                                 items.add(item)
                             }
                         }
@@ -141,11 +144,12 @@ class HomeFragment : Fragment() {
 
                     //Guardamos todos los productos obtenidos
                     allProducts = items
+
+                    // Configurar el RecyclerView
                     if (items.isNotEmpty()) {
-                        // Mostrar los productos populares en el RecyclerView
-                        binding.recyclerViewPopular.layoutManager =
-                            GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
-                        binding.recyclerViewPopular.adapter = ProductAdapter(items, false)
+                        val productAdapter = ProductAdapter(items, false)
+                        binding.recyclerViewPopular.layoutManager = GridLayoutManager(requireContext(), 2)
+                        binding.recyclerViewPopular.adapter = productAdapter
                     }
                     binding.progressBarPopular.visibility = View.GONE
                 }

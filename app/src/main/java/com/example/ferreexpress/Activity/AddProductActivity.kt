@@ -150,7 +150,7 @@ class AddProductActivity : AppCompatActivity() {
                     //DATOS INICIALES DEL PRODUCTO
                     val oldPrice: Double = price
                     val review: Int = 0
-                    val rating: Double = 5.0
+                    val rating: Double = 0.0
 
                     //Objeto del Producto
                     val newProduct = mapOf(
@@ -198,6 +198,7 @@ class AddProductActivity : AppCompatActivity() {
         val textPrice: EditText = findViewById(R.id.textPrice)
         val spinnerCategory: Spinner = findViewById(R.id.spinnerCategory)
         val textDescription: EditText = findViewById(R.id.textDescripcion)
+        var newOldPrice: Double = 0.0
 
         productRef.get().addOnSuccessListener { snapshot ->
             if (snapshot.exists()) {
@@ -209,6 +210,7 @@ class AddProductActivity : AppCompatActivity() {
                     val categoryIndex = opciones.indexOf(existingProduct.category)
                     spinnerCategory.setSelection(categoryIndex)
                     textDescription.setText(existingProduct.description)
+                    newOldPrice = existingProduct.price
 
                     // Cargar imágenes actuales del producto en el RecyclerView
                     val recyclerImage: RecyclerView = findViewById(R.id.recyclerImages)
@@ -270,6 +272,7 @@ class AddProductActivity : AppCompatActivity() {
                     val updatedProductValues = mapOf(
                         "title" to newTitle,
                         "price" to newPrice,
+                        "oldPrice" to newOldPrice,
                         "category" to newCategory,
                         "description" to newDescription,
                         "picUrl" to downloadUrls
@@ -294,6 +297,7 @@ class AddProductActivity : AppCompatActivity() {
                 }
         }
     }
+
 
     fun openImageSelector(){
         val intent = Intent(Intent.ACTION_PICK)
