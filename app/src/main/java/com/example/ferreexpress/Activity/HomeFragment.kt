@@ -161,8 +161,6 @@ class HomeFragment : Fragment() {
         })
     }
 
-
-
     private fun initCategory() {
         val myRef: DatabaseReference = database.getReference("Category")
         binding.progressBarCategory.visibility = View.VISIBLE
@@ -196,11 +194,10 @@ class HomeFragment : Fragment() {
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (issueSnapshot in snapshot.children) {
-                    val url = issueSnapshot.child("url").getValue(String::class.java)
-                    url?.let {
-                        val sliderItem = SliderItems().apply { setUrl(url) }
-                        items.add(sliderItem)
-                    }
+                    val id = issueSnapshot.key // Obtener el ID del nodo
+                    val url = issueSnapshot.child("url").getValue(String::class.java) ?: ""
+                    val sliderItem = SliderItems(id.toString(), url) // Crear un objeto SliderItems con ID y URL
+                    items.add(sliderItem)
                 }
                 banner(items)
                 binding.progressBarBanner.visibility = View.GONE
@@ -211,6 +208,8 @@ class HomeFragment : Fragment() {
             }
         })
     }
+
+
 
     private fun banner(items: ArrayList<SliderItems>) {
         binding.viewpagerSlider.adapter = SliderAdapter(items, binding.viewpagerSlider)

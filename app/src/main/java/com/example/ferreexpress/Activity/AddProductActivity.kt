@@ -27,6 +27,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.ByteArrayOutputStream
 import java.util.UUID
+import java.text.DecimalFormat
 
 class AddProductActivity : AppCompatActivity() {
     private var images: MutableList<ByteArray> = mutableListOf()
@@ -268,11 +269,18 @@ class AddProductActivity : AppCompatActivity() {
                         }
                     }
 
+                    //Datos extras
+                    val descuento: Double = 100 - (newPrice * 100)/newOldPrice
+
+                    val df = DecimalFormat("#.##")
+                    val off = df.format(descuento)
+
                     // Actualiza los valores del producto
                     val updatedProductValues = mapOf(
                         "title" to newTitle,
                         "price" to newPrice,
                         "oldPrice" to newOldPrice,
+                        "off" to off,
                         "category" to newCategory,
                         "description" to newDescription,
                         "picUrl" to downloadUrls

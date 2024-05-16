@@ -1,6 +1,7 @@
 package com.example.ferreexpress.Adapter
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +14,16 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.request.RequestOptions
+import com.example.ferreexpress.Activity.CategoryActivity
 import com.example.ferreexpress.Domain.SliderItems
+import com.example.ferreexpress.Helper.OnProductClickListener
 import com.example.ferreexpress.R
 
 class SliderAdapter(private val sliderItems: ArrayList<SliderItems>, private val viewPager2: ViewPager2) : RecyclerView.Adapter<SliderAdapter.SliderViewholder>() {
 
     private lateinit var context:Context
+
+
     private val runnable:Runnable = Runnable{
         sliderItems.addAll(sliderItems)
         notifyDataSetChanged()
@@ -29,7 +34,6 @@ class SliderAdapter(private val sliderItems: ArrayList<SliderItems>, private val
         viewType: Int
     ): SliderViewholder {
         context=parent.context
-
         return SliderViewholder(LayoutInflater.from(context).inflate(R.layout.slide_item_container,parent,false))
     }
 
@@ -49,10 +53,25 @@ class SliderAdapter(private val sliderItems: ArrayList<SliderItems>, private val
         fun setImage(sliderItems: SliderItems) {
             val requestOptions = RequestOptions().transform(CenterCrop())
             Glide.with(itemView.context)
-                .load(sliderItems.getUrl())
+                .load(sliderItems.url)
                 .apply(requestOptions)
                 .into(imageView)
+            imageView.setOnClickListener{
+                val intent = Intent(context, CategoryActivity::class.java)
+
+                when(sliderItems.id){
+                    "0" -> {
+                        // Enviar extra "Oferta 5" al hacer clic en el banner del 5% de descuento
+                        intent.putExtra(CategoryActivity.CATEGORY_EXTRA, "Oferta 5")
+                        context.startActivity(intent)
+                    }
+                    "1" -> {
+                        // Enviar extra "Oferta 10" al hacer clic en el banner del 10% de descuento
+                        intent.putExtra(CategoryActivity.CATEGORY_EXTRA, "Oferta 10")
+                        context.startActivity(intent)
+                    }
+                }
+            }
         }
     }
-
 }

@@ -28,7 +28,7 @@ class CategoryActivity : AppCompatActivity() {
     private lateinit var allProducts: ArrayList<itemsDomain>
 
     companion object {
-        const val CATEGORY_EXTRA = "category_extra"
+        const val CATEGORY_EXTRA = "Default"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +56,7 @@ class CategoryActivity : AppCompatActivity() {
 
         //Obtiene la categoria seleccionada de la actividad anterior
         val category = intent.getStringExtra(CATEGORY_EXTRA)
-        category?.let { initProducts(it) }
+        initProducts(category.toString())
 
         //Agrega un TextWatcher al EditText para filtrar los productos mientras el usuario escribe
         binding.editTextBuscar.addTextChangedListener(object : TextWatcher {
@@ -118,6 +118,7 @@ class CategoryActivity : AppCompatActivity() {
                             val reviewCount = (itemData["review"] as Long?)?.toInt() ?: 0
                             val rating = (itemData["rating"] as Number?)?.toDouble() ?: 0.0
                             val numberinCart = (itemData["numberinCart"] as Long?)?.toInt() ?: 0
+                            val off = (itemData["off"] as Number?)?.toDouble() ?: 0.0
 
                             // Obtiene la lista de URL de las imagenes del producto
                             val picUrlList = itemData["picUrl"] as ArrayList<String>? ?: ArrayList()
@@ -151,13 +152,28 @@ class CategoryActivity : AppCompatActivity() {
                                 reviewCount,
                                 rating,
                                 numberinCart,
-                                reviews
+                                reviews,
+                                off
                             )
 
-                            // Verificar si el producto pertenece a la categoría deseada
-                            if (productCategory == category) {
+                            // Verificar si el producto pertenece a la característica deseada
+                            if (category == "Oferta 10") {
+                                val productDiscount = item.off
+                                // Filtrar por descuento si la categoría es "Oferta 10"
+                                if (productDiscount in 7.00..12.99) {
+                                    items.add(item)
+                                }
+                            } else if (category == "Oferta 5") {
+                                val productDiscount = item.off
+                                // Filtrar por descuento si la categoría es "Oferta 5"
+                                if (productDiscount in 2.00..6.99) {
+                                    items.add(item)
+                                }
+                            } else if (category == item.category) {
+                                // Filtrar por categoría si la categoría no es "Oferta"
                                 items.add(item)
                             }
+
                         }
                     }
 
@@ -179,4 +195,5 @@ class CategoryActivity : AppCompatActivity() {
             }
         })
     }
+
 }

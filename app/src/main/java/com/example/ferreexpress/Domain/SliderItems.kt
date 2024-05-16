@@ -1,19 +1,6 @@
 package com.example.ferreexpress.Domain
 
-public class SliderItems {
-    private var url: String = ""
-
-    constructor()
-    constructor(url: String) {
-        this.url = url
-    }
-
-
-    fun getUrl(): String {
-        return url
-    }
-
-    fun setUrl(url: String) {
-        this.url = url
-    }
-}
+data class SliderItems (
+    var id: String = "", // Nuevo campo para almacenar el ID
+    var url: String = ""
+)

@@ -19,14 +19,11 @@ import android.text.style.StrikethroughSpan
 class ProductAdapter(private var productList: List<itemsDomain>, private val isSeller: Boolean) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
     private lateinit var context: Context
-    private var productClickListener: OnProductClickListener? = null
-
 
     // ViewHolder para cada elemento de la lista
     inner class ViewHolder(private val binding: ViewholderProductBinding) : RecyclerView.ViewHolder(binding.root) {
         // Función para asignar datos a las vistas del ViewHolder
         fun bind(product: itemsDomain) {
-
             //VISTA DE LA INFO DEL PRODUCTO, SU NOMBRE, PRECIO ETC
             binding.textName.text = product.title
             binding.reviews.text = "" + product.review
