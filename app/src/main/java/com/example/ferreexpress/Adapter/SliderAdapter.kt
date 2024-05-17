@@ -23,18 +23,14 @@ class SliderAdapter(private val sliderItems: ArrayList<SliderItems>, private val
 
     private lateinit var context:Context
 
-
     private val runnable:Runnable = Runnable{
         sliderItems.addAll(sliderItems)
         notifyDataSetChanged()
     }
 
-    override fun onCreateViewHolder(
-        @NonNull parent: ViewGroup,
-        viewType: Int
-    ): SliderViewholder {
-        context=parent.context
-        return SliderViewholder(LayoutInflater.from(context).inflate(R.layout.slide_item_container,parent,false))
+    override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): SliderViewholder {
+        context = parent.context
+        return SliderViewholder(LayoutInflater.from(context).inflate(R.layout.slide_item_container, parent, false))
     }
 
     override fun onBindViewHolder(holder: SliderViewholder, position: Int) {

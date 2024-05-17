@@ -35,6 +35,11 @@ class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private lateinit var allProducts: ArrayList<itemsDomain>
+    private lateinit var productAdapter: ProductAdapter
+    private var isLoading = false
+    private val itemsPerPage = 2
+    private var lastVisibleItem: Int = 0
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -68,29 +73,47 @@ class HomeFragment : Fragment() {
     }
 
     private fun initPopular() {
-        //Obtiene una referencia a la base de datos
-        val myRef: DatabaseReference = database.reference.child("Users")
-
-        //Muestra la barra de progreso mientras se cargan los productos
         binding.progressBarPopular.visibility = View.VISIBLE
+        allProducts = ArrayList()
 
-        val items: ArrayList<itemsDomain> = ArrayList()
+        productAdapter = ProductAdapter(allProducts, false)
+        binding.recyclerViewPopular.layoutManager = GridLayoutManager(requireContext(), 2)
+        binding.recyclerViewPopular.adapter = productAdapter
 
-        var lastVisibleItem = 0
+        loadInitialProducts() // Load initial products
 
-        //Obtenemos los datos de la base de datos
+        binding.recyclerViewPopular.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as GridLayoutManager
+                if (!isLoading && layoutManager.findLastCompletelyVisibleItemPosition() == allProducts.size - 1) {
+                    loadMoreProducts(allProducts.size)
+                }
+            }
+        })
+    }
+
+    private fun loadInitialProducts() {
+        loadMoreProducts(lastVisibleItem, itemsPerPage) // Load initial 2 products
+    }
+
+    private fun loadMoreProducts(startIndex: Int, count: Int = itemsPerPage) {
+        isLoading = true
+        val myRef: DatabaseReference = database.reference.child("Users")
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    for (userSnapshot in snapshot.children) {
+                    val items: ArrayList<itemsDomain> = ArrayList()
+                    var currentCount = 0
+
+                    outer@ for (userSnapshot in snapshot.children) {
                         val userProductsRef = userSnapshot.child("products")
-
-                        // Itera sobre cada producto del usuario
-                        for (productSnapshot in userProductsRef.children) {
+                        val productList = userProductsRef.children.toList()
+                        for (i in startIndex until productList.size) {
+                            val productSnapshot = productList[i]
                             val keyItem = productSnapshot.key.toString()
-                            val itemData = productSnapshot.value as HashMap<*, *> // Cast a HashMap
+                            val itemData = productSnapshot.value as HashMap<*, *>
 
-                            //Obtenemos los detalles del producto
                             val title = itemData["title"] as String
                             val productCategory = itemData["category"] as String
                             val description = itemData["description"] as String
@@ -100,27 +123,20 @@ class HomeFragment : Fragment() {
                             val rating = (itemData["rating"] as Number?)?.toDouble() ?: 0.0
                             val numberinCart = (itemData["numberinCart"] as Long?)?.toInt() ?: 0
 
-                            // Obtiene la lista de URL de las imagenes del producto
                             val picUrlList = itemData["picUrl"] as ArrayList<String>? ?: ArrayList()
                             val reviewsList = itemData["reviews"] as HashMap<String, Any>? ?: HashMap()
-
                             val reviews: ArrayList<ReviewDomain> = ArrayList()
 
-                            // Iteramos sobre cada elemento del HashMap de reviews
                             for ((_, reviewData) in reviewsList) {
-                                // Obtenemos los detalles de la revision
                                 if (reviewData is HashMap<*, *>) {
                                     val nameUser = reviewData["nameUser"] as String
                                     val comentary = reviewData["comentary"] as String
-                                    val rating = (reviewData["rating"] as Double?) ?: 0.0
-
-                                    // Creamos un objeto ReviewDomain y lo agrega a la lista de Reviews
-                                    val review = ReviewDomain(nameUser, comentary, "", rating)
+                                    val reviewRating = (reviewData["rating"] as Double?) ?: 0.0
+                                    val review = ReviewDomain(nameUser, comentary, "", reviewRating)
                                     reviews.add(review)
                                 }
                             }
 
-                            // Crea un objeto itemsDomain con los detalles del producto
                             val item = itemsDomain(
                                 keyItem,
                                 title,
@@ -135,23 +151,21 @@ class HomeFragment : Fragment() {
                                 reviews
                             )
 
-                            // Verificar si el producto tiene una calificacion mayor a 4
                             if (rating >= 1.0) {
                                 items.add(item)
+                                currentCount++
+                                if (currentCount >= count) {
+                                    lastVisibleItem = i + 1
+                                    break@outer
+                                }
                             }
                         }
                     }
 
-                    //Guardamos todos los productos obtenidos
-                    allProducts = items
-
-                    // Configurar el RecyclerView
-                    if (items.isNotEmpty()) {
-                        val productAdapter = ProductAdapter(items, false)
-                        binding.recyclerViewPopular.layoutManager = GridLayoutManager(requireContext(), 2)
-                        binding.recyclerViewPopular.adapter = productAdapter
-                    }
+                    allProducts.addAll(items)
+                    productAdapter.notifyDataSetChanged()
                     binding.progressBarPopular.visibility = View.GONE
+                    isLoading = false
                 }
             }
 
@@ -180,7 +194,6 @@ class HomeFragment : Fragment() {
                     binding.progressBarCategory.visibility = View.GONE
                 }
             }
-
             override fun onCancelled(error: DatabaseError) {
                 // Handle error
             }
@@ -194,22 +207,19 @@ class HomeFragment : Fragment() {
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (issueSnapshot in snapshot.children) {
-                    val id = issueSnapshot.key // Obtener el ID del nodo
+                    val id = issueSnapshot.key
                     val url = issueSnapshot.child("url").getValue(String::class.java) ?: ""
-                    val sliderItem = SliderItems(id.toString(), url) // Crear un objeto SliderItems con ID y URL
+                    val sliderItem = SliderItems(id.toString(), url)
                     items.add(sliderItem)
                 }
                 banner(items)
                 binding.progressBarBanner.visibility = View.GONE
             }
-
             override fun onCancelled(error: DatabaseError) {
                 // Handle error
             }
         })
     }
-
-
 
     private fun banner(items: ArrayList<SliderItems>) {
         binding.viewpagerSlider.adapter = SliderAdapter(items, binding.viewpagerSlider)

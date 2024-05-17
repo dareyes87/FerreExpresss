@@ -121,7 +121,8 @@ class DetailActivity : AppCompatActivity() {
         var sliderItems = ArrayList<SliderItems>()
 
         for (i in item.picUrl.indices) {
-            sliderItems.add(SliderItems(item.picUrl[i]))
+            val url = item.picUrl[i]
+            sliderItems.add(SliderItems(i.toString(), url))
         }
 
         binding.viewpageSlider.adapter = SliderAdapter(sliderItems, binding.viewpageSlider)
