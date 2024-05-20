@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainRegistroUser"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#192B35"
+    tools:context=".Activity.RegistroUserActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainRegistro"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/fondocurva"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView11"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ferreexpresslogo" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/button2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView11">
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="monospace"
+                android:text="REGISTRO"
+                android:textColor="#000000"
+                android:textColorHint="#B2000000"
+                android:textColorLink="#000000"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTxtNameUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:ems="10"
+                android:fontFamily="monospace"
+                android:hint="Nombre..."
+                android:inputType="text"
+                android:textColor="#000000"
+                android:textColorHint="#B2000000"
+                android:textColorLink="#000000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTxtPhone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:ems="10"
+                android:fontFamily="monospace"
+                android:hint="Telefono"
+                android:inputType="phone"
+                android:textColor="#000000"
+                android:textColorHint="#B2000000"
+                android:textColorLink="#000000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTxtDepaUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:fontFamily="monospace"
+                android:hint="Departamento..."
+                android:inputType="text"
+                android:textColor="#000000"
+                android:textColorHint="#B2000000"
+                android:textColorLink="#000000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTxtMuniUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:fontFamily="monospace"
+                android:hint="Municipio..."
+                android:inputType="text"
+                android:textColor="#000000"
+                android:textColorHint="#B2000000"
+                android:textColorLink="#000000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTxtBarrioUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:fontFamily="monospace"
+                android:hint="Barrio..."
+                android:inputType="text"
+                android:textColor="#000000"
+                android:textColorHint="#B2000000"
+                android:textColorLink="#000000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTxtCalle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:fontFamily="monospace"
+                android:hint="Calle..."
+                android:inputType="text"
+                android:textColor="#000000"
+                android:textColorHint="#B3000000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/editTxtDireccionUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:ems="10"
+                android:fontFamily="monospace"
+                android:hint="Direccion..."
+                android:inputType="text"
+                android:textColor="#000000"
+                android:textColorHint="#B2000000"
+                android:textColorLink="#000000"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnRegistroDatosUser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="monospace"
+            android:text="REGISTRARSE"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
