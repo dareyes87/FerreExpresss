@@ -67,7 +67,7 @@ class AuthActivity : AppCompatActivity() {
                 FirebaseAuth.getInstance().
                 createUserWithEmailAndPassword(emailEditText.text.toString(), passwordEditText.text.toString()).addOnCompleteListener(){
                     if(it.isSuccessful){
-                        showHome()
+                        showRegistro()
                     }else{
                         showAlert()
                     }
@@ -120,6 +120,13 @@ class AuthActivity : AppCompatActivity() {
         }
         startActivity(homeIntent)
     }
+
+    private fun showRegistro(){
+        val registroIntent = Intent(this, RegistroUserActivity::class.java).apply {
+        }
+        startActivity(registroIntent)
+    }
+
 
     private fun ComprobarSesion(){
         firebaseUser = FirebaseAuth.getInstance().currentUser
