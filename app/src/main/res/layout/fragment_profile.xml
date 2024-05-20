@@ -54,22 +54,34 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
 
                         <ImageView
                             android:id="@+id/imageView9"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             tools:srcCompat="@tools:sample/avatars" />
 
                         <TextView
                             android:id="@+id/textView11"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="holamundo87@gmail.com"
+                            android:gravity="center_vertical"
+                            android:paddingStart="16dp" />
+
+                        <ImageView
+                            android:id="@+id/imageViewFavorites"
+                            android:layout_width="25dp"
+                            android:layout_height="40dp"
                             android:layout_weight="1"
-                            android:text="holamundo87@gmail.com" />
+                            android:contentDescription="Favoritos"
+                            android:padding="8dp"
+                            android:src="@drawable/estrella" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
