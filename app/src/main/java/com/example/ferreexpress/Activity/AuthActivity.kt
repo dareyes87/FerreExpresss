@@ -80,7 +80,7 @@ class AuthActivity : AppCompatActivity() {
                 FirebaseAuth.getInstance().
                 signInWithEmailAndPassword(emailEditText.text.toString(), passwordEditText.text.toString()).addOnCompleteListener(){
                     if(it.isSuccessful){
-                        showHome()
+                        showRegistro()
                     }else{
                         showAlert()
                     }
@@ -103,7 +103,6 @@ class AuthActivity : AppCompatActivity() {
             val signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient)
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
-
     }
 
     private fun showAlert(){
@@ -167,13 +166,12 @@ class AuthActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success
-                    showHome()
+                    showRegistro()
                 } else {
                     // Sign in failed
                     showAlert()
                 }
             }
     }
-
 
 }
