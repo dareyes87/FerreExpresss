@@ -75,7 +75,7 @@
                             android:paddingStart="16dp" />
 
                         <ImageView
-                            android:id="@+id/imageViewFavorites"
+                            android:id="@+id/imageFav"
                             android:layout_width="25dp"
                             android:layout_height="40dp"
                             android:layout_weight="1"

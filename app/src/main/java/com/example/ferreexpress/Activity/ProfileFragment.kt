@@ -24,7 +24,7 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        imageViewFavorites = view.findViewById(R.id.imageViewFavorites)
+        imageViewFavorites = view.findViewById(R.id.imageFav)
         imageViewFavorites.setOnClickListener {
             // Acción a realizar cuando se hace clic en el ImageView de favoritos
             val homeIntent = Intent(requireContext(), pedidos::class.java).apply {
