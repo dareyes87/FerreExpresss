@@ -47,6 +47,9 @@
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/rounded_corner" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <activity
             android:name=".Activity.AuthActivity"
