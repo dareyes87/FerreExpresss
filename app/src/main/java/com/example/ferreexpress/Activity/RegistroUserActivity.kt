@@ -1,18 +1,23 @@
 package com.example.ferreexpress.Activity
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Editable
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -21,8 +26,13 @@ import androidx.core.content.ContextCompat
 import java.util.Locale
 import com.example.ferreexpress.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import java.io.ByteArrayOutputStream
+import java.io.IOException
 
+@Suppress("DEPRECATION")
 class RegistroUserActivity : AppCompatActivity(), LocationListener {
 
     private lateinit var locationManager: LocationManager
@@ -34,6 +44,9 @@ class RegistroUserActivity : AppCompatActivity(), LocationListener {
     private lateinit var tvCalle: EditText
     private lateinit var tvAddres: EditText
     private lateinit var btnRegistrarse: Button
+    private lateinit var viewPicUser: ImageView
+    private val PICK_IMAGE_REQUEST = 1
+    private var imageUri: Uri? = null
 
     private val database = FirebaseDatabase.getInstance()
     private val auth = FirebaseAuth.getInstance()
@@ -55,13 +68,36 @@ class RegistroUserActivity : AppCompatActivity(), LocationListener {
         tvCalle = findViewById(R.id.editTxtCalle)
         tvAddres = findViewById(R.id.editTxtDireccionUser)
         btnRegistrarse = findViewById(R.id.btnRegistroDatosUser)
+        viewPicUser = findViewById(R.id.imagePicUser)
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         locationEnabled()
         getLocation()
 
+        viewPicUser.setOnClickListener {
+            openImageChooser()
+        }
+
         btnRegistrarse.setOnClickListener {
             saveUserData()
+        }
+    }
+
+    private fun openImageChooser() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+            imageUri = data.data
+            try {
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+                viewPicUser.setImageBitmap(bitmap)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
         }
     }
 
@@ -78,38 +114,74 @@ class RegistroUserActivity : AppCompatActivity(), LocationListener {
 
         if (userId != null) {
             val userRef = database.reference.child("Users").child(userId)
-            val userData = mapOf(
-                "name" to name,
-                "phone" to phone,
-                "depa" to depa,
-                "muni" to muni,
-                "barrio" to barrio,
-                "calle" to calle,
-                "address" to address,
-                "type" to "comprador"
-            )
+            if (imageUri != null) {
+                // If imageUri is not null, upload the image first
+                uploadImageToFirebase(name, phone, depa, muni, barrio, calle, address, userId, userRef)
+            } else {
+                // If no image selected, just save user data
+                saveUserDataToDatabase(name, phone, depa, muni, barrio, calle, address, userId, null)
+            }
+        }
+    }
 
-            userRef.setValue(userData).addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // Guardar en SharedPreferences
-                    val sharedPref = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
-                    with(sharedPref.edit()) {
-                        putString("name", name)
-                        putString("phone", phone)
-                        putString("depa", depa)
-                        putString("muni", muni)
-                        putString("barrio", barrio)
-                        putString("calle", calle)
-                        putString("address", address)
-                        apply()
+    private fun uploadImageToFirebase(name: String, phone: String, depa: String, muni: String, barrio: String, calle: String, address: String, userId: String, userRef: DatabaseReference) {
+        val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri)
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos)
+        val data = baos.toByteArray()
+
+        val storageReference = FirebaseStorage.getInstance().reference.child("profile_images/$userId.jpg")
+        val uploadTask = storageReference.putBytes(data)
+        uploadTask.addOnSuccessListener {
+            storageReference.downloadUrl.addOnSuccessListener { uri ->
+                saveUserDataToDatabase(name, phone, depa, muni, barrio, calle, address, userId, uri.toString())
+            }
+        }.addOnFailureListener {
+            Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun saveUserDataToDatabase(name: String, phone: String, depa: String, muni: String, barrio: String, calle: String, address: String, userId: String, imageUrl: String?) {
+        val userRef = database.reference.child("Users").child(userId)
+        val userData = mutableMapOf(
+            "name" to name,
+            "phone" to phone,
+            "depa" to depa,
+            "muni" to muni,
+            "barrio" to barrio,
+            "calle" to calle,
+            "address" to address,
+            "type" to "comprador"
+        )
+        imageUrl?.let {
+            userData["profileImageUrl"] = it
+        }
+
+        userRef.setValue(userData).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                // Save data to SharedPreferences
+                val sharedPref = getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
+                with(sharedPref.edit()) {
+                    putString("name", name)
+                    putString("phone", phone)
+                    putString("depa", depa)
+                    putString("muni", muni)
+                    putString("barrio", barrio)
+                    putString("calle", calle)
+                    putString("address", address)
+                    putString("usuario", userId)
+                    putString("type", "comprador")
+                    imageUrl?.let {
+                        putString("profileImageUrl", it)
                     }
-
-                    Toast.makeText(this, "Datos guardados exitosamente", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                } else {
-                    Toast.makeText(this, "Error al guardar datos", Toast.LENGTH_SHORT).show()
+                    apply()
                 }
+
+                Toast.makeText(this, "Datos guardados exitosamente", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            } else {
+                Toast.makeText(this, "Error al guardar datos", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -167,8 +239,6 @@ class RegistroUserActivity : AppCompatActivity(), LocationListener {
             e.printStackTrace()
         }
     }
-
-
 
     override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
         // Deprecated
