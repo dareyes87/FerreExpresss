@@ -12,6 +12,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutStoreNoOpen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="32dp"
@@ -77,6 +78,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutStoreYesOpen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="32dp"
