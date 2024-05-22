@@ -58,6 +58,7 @@
                 android:fontFamily="monospace"
                 android:hint="Nombre de tu comercio"
                 android:inputType="text"
+                android:textColor="#000000"
                 android:textColorHint="#B3000000" />
 
             <EditText
@@ -69,6 +70,7 @@
                 android:gravity="start|top"
                 android:hint="Descripcion"
                 android:inputType="textMultiLine"
+                android:textColor="#000000"
                 android:textColorHint="#B3000000" />
 
             <EditText
@@ -79,6 +81,7 @@
                 android:ems="10"
                 android:hint="Correo de contacto..."
                 android:inputType="text"
+                android:textColor="#000000"
                 android:textColorHint="#B3000000" />
 
             <EditText
@@ -89,6 +92,7 @@
                 android:ems="10"
                 android:hint="Telefono de contacto..."
                 android:inputType="phone"
+                android:textColor="#000000"
                 android:textColorHint="#B3000000" />
 
         </LinearLayout>
