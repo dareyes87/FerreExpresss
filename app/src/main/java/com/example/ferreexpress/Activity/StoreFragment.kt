@@ -1,5 +1,6 @@
 package com.example.ferreexpress.Activity
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -15,6 +16,7 @@ import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.databinding.FragmentStoreBinding
 import com.google.firebase.database.*
 import java.util.Locale
+import com.example.ferreexpress.R
 
 class StoreFragment : Fragment() {
 
@@ -38,50 +40,64 @@ class StoreFragment : Fragment() {
     }
 
     private fun initUI() {
-        database = FirebaseDatabase.getInstance()
+        // Obtener el tipo de usuario desde SharedPreferences
+        val sharedPref = requireActivity().getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
+        val userType = sharedPref.getString("type", null)
 
-        // Configurar RecyclerView
-        binding.recyclerMyStore.layoutManager =
-            GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
-        productAdapter = ProductAdapter(ArrayList(), true)
-        binding.recyclerMyStore.adapter = productAdapter
+        if (userType == "comprador") {
+            // Si el usuario es comprador, mostrar layoutStoreNoOpen y ocultar layoutStoreYesOpen
+            binding.layoutStoreNoOpen.visibility = View.VISIBLE
+            binding.layoutStoreYesOpen.visibility = View.GONE
+            binding.floatBtnAddProduct.visibility = View.GONE
+        } else if (userType == "vendedor") {
+            // Si el usuario es vendedor, mostrar layoutStoreYesOpen y ocultar layoutStoreNoOpen
+            binding.layoutStoreNoOpen.visibility = View.GONE
+            binding.layoutStoreYesOpen.visibility = View.VISIBLE
+            binding.floatBtnAddProduct.visibility = View.VISIBLE
 
-        // Configurar botón flotante
-        binding.floatBtnAddProduct.setOnClickListener {
-            // Agregar lógica para agregar un nuevo producto
-            val intent = Intent(requireContext(), AddProductActivity::class.java)
-            startActivity(intent)
-        }
+            // Configurar RecyclerView
+            binding.recyclerMyStore.layoutManager =
+                GridLayoutManager(requireContext(), 2, GridLayoutManager.VERTICAL, false)
+            productAdapter = ProductAdapter(ArrayList(), true)
+            binding.recyclerMyStore.adapter = productAdapter
 
-        // Inicializar productos
-        initProducts()
-
-        // Configurar búsqueda de productos
-        binding.editTextBuscarEnStore.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // No es necesario implementar esta función
+            // Configurar botón flotante
+            binding.floatBtnAddProduct.setOnClickListener {
+                // Agregar lógica para agregar un nuevo producto
+                val intent = Intent(requireContext(), AddProductActivity::class.java)
+                startActivity(intent)
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // No es necesario implementar esta función
-            }
+            // Inicializar productos
+            initProducts()
 
-            override fun afterTextChanged(s: Editable?) {
-                // Filtrar productos según el texto ingresado por el usuario
-                val searchText = s.toString().toLowerCase(Locale.getDefault())
-                val filteredProducts = ArrayList<itemsDomain>()
-
-                for (product in allProducts) {
-                    if (product.title.toLowerCase(Locale.getDefault()).contains(searchText)) {
-                        filteredProducts.add(product)
-                    }
+            // Configurar búsqueda de productos
+            binding.editTextBuscarEnStore.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    // No es necesario implementar esta función
                 }
 
-                // Actualizar el RecyclerView con los productos filtrados
-                productAdapter.setItems(filteredProducts)
-                productAdapter.notifyDataSetChanged()
-            }
-        })
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    // No es necesario implementar esta función
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    // Filtrar productos según el texto ingresado por el usuario
+                    val searchText = s.toString().toLowerCase(Locale.getDefault())
+                    val filteredProducts = ArrayList<itemsDomain>()
+
+                    for (product in allProducts) {
+                        if (product.title.toLowerCase(Locale.getDefault()).contains(searchText)) {
+                            filteredProducts.add(product)
+                        }
+                    }
+
+                    // Actualizar el RecyclerView con los productos filtrados
+                    productAdapter.setItems(filteredProducts)
+                    productAdapter.notifyDataSetChanged()
+                }
+            })
+        }
     }
 
     private fun initProducts() {
