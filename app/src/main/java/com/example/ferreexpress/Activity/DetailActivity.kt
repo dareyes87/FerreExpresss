@@ -1,5 +1,4 @@
 package com.example.ferreexpress.Activity
-
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -16,12 +15,11 @@ import com.example.ferreexpress.Domain.SliderItems
 import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.Fragment.DescriptionFragment
 import com.example.ferreexpress.Fragment.ReviewFragment
-import com.example.ferreexpress.Fragment.SoldFragment
 import com.example.ferreexpress.Helper.ManagmentCart
 import com.example.ferreexpress.databinding.ActivityDetailBinding
-import com.google.firebase.Firebase
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.database
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class DetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailBinding
@@ -36,7 +34,7 @@ class DetailActivity : AppCompatActivity() {
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //Cosas ocultas por default
+        // Cosas ocultas por default
         binding.deleteBtn.visibility = View.GONE
         binding.editBtn.visibility = View.GONE
 
@@ -47,7 +45,7 @@ class DetailActivity : AppCompatActivity() {
             binding.addTocartBtn.visibility = View.GONE
             binding.favBtn.visibility = View.GONE
 
-            //Si es vendedor, agregar lo siguiente
+            // Si es vendedor, agregar lo siguiente
             binding.deleteBtn.visibility = View.VISIBLE
             binding.editBtn.visibility = View.VISIBLE
         }
@@ -76,7 +74,7 @@ class DetailActivity : AppCompatActivity() {
             builder.show()
         }
 
-        binding.editBtn.setOnClickListener{
+        binding.editBtn.setOnClickListener {
             val intent = Intent(this, AddProductActivity::class.java)
             intent.putExtra("isEdit", true)
             intent.putExtra("keyProduct", key)
@@ -84,10 +82,21 @@ class DetailActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Configurar listener para favBtn
+        binding.favBtn.setOnClickListener {
+            agregarAFavoritos()
+        }
+
         managmentCart = ManagmentCart(this)
-        getBundles();
+        getBundles()
         banners()
         setupViewPager(key.toString())
+    }
+
+    private fun agregarAFavoritos() {
+        // Aquí agregas la lógica para agregar a favoritos
+        Toast.makeText(this, "Producto agregado a favoritos", Toast.LENGTH_SHORT).show()
+        // Por ejemplo, puedes agregar la lógica para guardar en la base de datos de favoritos
     }
 
     fun deleteProduct(productId: String) {
@@ -117,7 +126,7 @@ class DetailActivity : AppCompatActivity() {
     }
 
     private fun banners() {
-        //MOSTRAR LAS IMAGENES DE LOS PRODUCTOS EN UN SLIDER
+        // MOSTRAR LAS IMAGENES DE LOS PRODUCTOS EN UN SLIDER
         var sliderItems = ArrayList<SliderItems>()
 
         for (i in item.picUrl.indices) {
@@ -130,13 +139,12 @@ class DetailActivity : AppCompatActivity() {
         binding.viewpageSlider.clipChildren = false
         binding.viewpageSlider.offscreenPageLimit = 3
         binding.viewpageSlider.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-
     }
 
-    private fun setupViewPager(key: String){
+    private fun setupViewPager(key: String) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         val tab1: DescriptionFragment = DescriptionFragment()
-        val tab2: ReviewFragment = ReviewFragment(key.toString())
+        val tab2: ReviewFragment = ReviewFragment(key)
 
         val bundle1: Bundle = Bundle()
         val bundle2: Bundle = Bundle()
@@ -155,19 +163,18 @@ class DetailActivity : AppCompatActivity() {
     private fun getBundles() {
         item = intent.getSerializableExtra("object") as? itemsDomain ?: return
         binding.titleTxt.text = item.title
-        binding.priceTxt.text = "$"+item.price
+        binding.priceTxt.text = "$" + item.price
         binding.ratingBar.rating = item.rating.toFloat()
         binding.addTocartBtn.setOnClickListener { v ->
             item.numberinCart = numberOrder
             managmentCart.insertFood(item)
         }
-        binding.backBtn.setOnClickListener{ v ->
+        binding.backBtn.setOnClickListener { v ->
             finish()
         }
-
     }
 
-    class ViewPagerAdapter(fm:FragmentManager) : FragmentPagerAdapter(fm){
+    class ViewPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
         private val mFragmentList: MutableList<Fragment> = ArrayList()
         private val mFragmentTitleList: MutableList<String> = ArrayList()
         override fun getItem(position: Int): Fragment {
@@ -178,7 +185,7 @@ class DetailActivity : AppCompatActivity() {
             return mFragmentList.size
         }
 
-        public fun addFrag(fragment: Fragment, title: String){
+        fun addFrag(fragment: Fragment, title: String) {
             mFragmentList.add(fragment)
             mFragmentTitleList.add(title)
         }
@@ -187,5 +194,4 @@ class DetailActivity : AppCompatActivity() {
             return mFragmentTitleList[position]
         }
     }
-
 }
