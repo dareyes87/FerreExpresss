@@ -3,6 +3,7 @@ package com.example.ferreexpress.Activity
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -51,6 +52,9 @@ class AddProductActivity : AppCompatActivity() {
         val isEdit = intent.getBooleanExtra("isEdit", false)
         var key = intent.getStringExtra("keyProduct")
 
+        val sharedPref = this.getSharedPreferences(getString(R.string.prefs_file), MODE_PRIVATE)
+        val userID = sharedPref.getString("usuario", null)
+
         //Configuracion del Spinner para la categoria del producto
         val spinner: Spinner = findViewById(R.id.spinnerCategory)
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, opciones)
@@ -70,9 +74,9 @@ class AddProductActivity : AppCompatActivity() {
             binding.btnPushProduct.visibility = View.GONE
             binding.textView21.text = "Editar Producto"
             //Accion para agregar el nuevo producto
-            updateProduct(key.toString())
+            updateProduct(key.toString(), userID.toString())
         } else {
-            pushProduct()
+            pushProduct(userID.toString())
         }
 
         // Configura el RecyclerView para mostrar las imágenes seleccionadas
@@ -88,7 +92,7 @@ class AddProductActivity : AppCompatActivity() {
         return outputStream.toByteArray()
     }
 
-    fun pushProduct(){
+    fun pushProduct(userID: String){
         // Obtiene una referencia a la base de datos de Firebase
         val database = Firebase.database
         val usersRef = database.getReference("Users")
@@ -166,7 +170,7 @@ class AddProductActivity : AppCompatActivity() {
                     )
 
                     //Agregarlo a la base de datos
-                    val userId = "UserID_1"
+                    val userId = userID
                     val userProductsRef = usersRef.child(userId).child("products")
                     val newProductRef = userProductsRef.push()
                     newProductRef.setValue(newProduct)
@@ -176,6 +180,9 @@ class AddProductActivity : AppCompatActivity() {
                                 "Producto agregado a tu comercio",
                                 Toast.LENGTH_SHORT
                             ).show()
+
+                            //Cierra la actividad
+                            finish()
                         }
                         .addOnFailureListener { e ->
                             Toast.makeText(this, "Error al agregar el producto", Toast.LENGTH_SHORT)
@@ -185,11 +192,11 @@ class AddProductActivity : AppCompatActivity() {
         }
     }
 
-    fun updateProduct(key: String) {
+    fun updateProduct(key: String, userID: String) {
         // Obtiene una referencia a la base de datos de Firebase
         val database = Firebase.database
         val usersRef = database.getReference("Users")
-        val userId = "UserID_1" //ID DE LA TIENDA AL CUAL PERTENECE EL PRODUCTO
+        val userId = userID //ID DE LA TIENDA AL CUAL PERTENECE EL PRODUCTO
 
         //REFERENCIA AL PRODUCTO EN ESPECIFICO
         val productRef = usersRef.child(userId).child("products").child(key)
@@ -273,7 +280,7 @@ class AddProductActivity : AppCompatActivity() {
                     val descuento: Double = 100 - (newPrice * 100)/newOldPrice
 
                     val df = DecimalFormat("#.##")
-                    val off = df.format(descuento)
+                    val off: Double = df.format(descuento).toDouble()
 
                     // Actualiza los valores del producto
                     val updatedProductValues = mapOf(
@@ -294,6 +301,9 @@ class AddProductActivity : AppCompatActivity() {
                                 "Producto actualizado correctamente",
                                 Toast.LENGTH_SHORT
                             ).show()
+
+                            // Cierra la actividad
+                            finish()
                         }
                         .addOnFailureListener { e ->
                             Toast.makeText(

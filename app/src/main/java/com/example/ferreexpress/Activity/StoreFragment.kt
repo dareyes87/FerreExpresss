@@ -22,7 +22,7 @@ class StoreFragment : Fragment() {
 
     private lateinit var binding: FragmentStoreBinding
     private lateinit var database: FirebaseDatabase
-    private lateinit var allProducts: ArrayList<itemsDomain>
+    private var allProducts: ArrayList<itemsDomain> = ArrayList()
     private lateinit var productAdapter: ProductAdapter
 
     override fun onCreateView(
@@ -111,6 +111,7 @@ class StoreFragment : Fragment() {
     }
 
     private fun initProducts(userId: String) {
+        allProducts = ArrayList()
         val myRef: DatabaseReference = database.reference.child("Users").child(userId).child("products")
         val items: ArrayList<itemsDomain> = ArrayList()
 

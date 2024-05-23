@@ -16,6 +16,7 @@ import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.Fragment.DescriptionFragment
 import com.example.ferreexpress.Fragment.ReviewFragment
 import com.example.ferreexpress.Helper.ManagmentCart
+import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.ActivityDetailBinding
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
@@ -38,8 +39,13 @@ class DetailActivity : AppCompatActivity() {
         binding.deleteBtn.visibility = View.GONE
         binding.editBtn.visibility = View.GONE
 
+        // Datos Extras Necesarios
         var key = intent.getStringExtra("keyProduct")
         val isSeller = intent.getBooleanExtra("isSeller", false)
+
+        val sharedPref = this.getSharedPreferences(getString(R.string.prefs_file), MODE_PRIVATE)
+        val userID = sharedPref.getString("usuario", null)
+
         if (isSeller) {
             // Si es vendedor, ocultar lo siguiente
             binding.addTocartBtn.visibility = View.GONE
@@ -56,7 +62,7 @@ class DetailActivity : AppCompatActivity() {
             builder.setMessage("¿Estás seguro de que deseas eliminar este producto?")
             builder.setPositiveButton("Sí") { dialog, which ->
                 // Elimina el producto de la base de datos
-                deleteProduct(key.toString())
+                deleteProduct(key.toString(), userID.toString())
 
                 Toast.makeText(
                     this,
@@ -64,7 +70,7 @@ class DetailActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                // Después de eliminar, puedes cerrar esta actividad o realizar otras acciones necesarias
+                // Cierra la actividad
                 finish()
             }
             builder.setNegativeButton("Cancelar") { dialog, which ->
@@ -99,12 +105,12 @@ class DetailActivity : AppCompatActivity() {
         // Por ejemplo, puedes agregar la lógica para guardar en la base de datos de favoritos
     }
 
-    fun deleteProduct(productId: String) {
+    fun deleteProduct(productId: String, userID: String) {
         val database = Firebase.database
         val usersRef = database.getReference("Users")
 
         // Suponiendo que tengas el ID del usuario y el ID del producto
-        val userId = "UserID_1"
+        val userId = userID
         val productIdToDelete = productId
 
         // Referencia al producto que deseas eliminar
