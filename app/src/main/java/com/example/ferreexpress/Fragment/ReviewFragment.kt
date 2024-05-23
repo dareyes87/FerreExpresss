@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 
-class ReviewFragment(var key: String) : Fragment() {
+class ReviewFragment(var key: String, var idStore: String) : Fragment() {
 
     private var database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private lateinit var binding: FragmentReviewBinding
@@ -37,25 +38,25 @@ class ReviewFragment(var key: String) : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //Publicar Comentarios
-        pushReview(view, key)
+        pushReview(view, key, idStore)
         //Mostrar los comentarios
-        initComentarios(key)
+        initComentarios(key, idStore)
     }
 
-    private fun pushReview(view: View, keyP: String){
+    private fun pushReview(view: View, keyP: String, idS: String){
         val pushReview: FloatingActionButton = view.findViewById(R.id.floatingButtonReview)
         pushReview.setOnClickListener{
             //MOSTRAR EL DIALOGO PARA PUBLICAR UN COMENTARIO
-            val dialog = ReviewDialogAdapter(requireContext(), keyP)
+            val dialog = ReviewDialogAdapter(requireActivity() as AppCompatActivity, keyP, idS)
             dialog.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(android.R.color.transparent)))
             dialog.show()
         }
     }
 
-    private fun initComentarios(key: String){
+    private fun initComentarios(key: String, idStore: String){
         //OBTIENE UNA REFERENCIA A LA BASE DE DATOS FIREBASE
         val myRef: DatabaseReference = database.reference
-            .child("Users").child("UserID_1")
+            .child("Users").child(idStore)
             .child("products").child(key).child("reviews")
 
         val comentarys: ArrayList<ReviewDomain> = ArrayList()
@@ -68,7 +69,7 @@ class ReviewFragment(var key: String) : Fragment() {
 
                         val nombre = comentaryData["nameUser"] as String
                         val cometario = comentaryData["comentary"] as String
-                        val picUrl = comentaryData["PicUrl"] as String
+                        val picUrl = comentaryData["urlUser"] as String
                         val puntuacion = comentaryData["rating"] as Double
 
                         val comentarioItem = ReviewDomain(

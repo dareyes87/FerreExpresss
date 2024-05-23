@@ -1,4 +1,5 @@
 package com.example.ferreexpress.Activity
+
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -41,6 +42,7 @@ class DetailActivity : AppCompatActivity() {
 
         // Datos Extras Necesarios
         var key = intent.getStringExtra("keyProduct")
+        var idStore = intent.getStringExtra("refStore")
         val isSeller = intent.getBooleanExtra("isSeller", false)
 
         val sharedPref = this.getSharedPreferences(getString(R.string.prefs_file), MODE_PRIVATE)
@@ -96,7 +98,7 @@ class DetailActivity : AppCompatActivity() {
         managmentCart = ManagmentCart(this)
         getBundles()
         banners()
-        setupViewPager(key.toString())
+        setupViewPager(key.toString(), idStore.toString())
     }
 
     private fun agregarAFavoritos() {
@@ -147,10 +149,10 @@ class DetailActivity : AppCompatActivity() {
         binding.viewpageSlider.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
     }
 
-    private fun setupViewPager(key: String) {
+    private fun setupViewPager(key: String, idStore: String) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         val tab1: DescriptionFragment = DescriptionFragment()
-        val tab2: ReviewFragment = ReviewFragment(key)
+        val tab2: ReviewFragment = ReviewFragment(key, idStore)
 
         val bundle1: Bundle = Bundle()
         val bundle2: Bundle = Bundle()

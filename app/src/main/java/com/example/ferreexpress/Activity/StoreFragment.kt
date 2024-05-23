@@ -114,6 +114,7 @@ class StoreFragment : Fragment() {
         allProducts = ArrayList()
         val myRef: DatabaseReference = database.reference.child("Users").child(userId).child("products")
         val items: ArrayList<itemsDomain> = ArrayList()
+        var refStore: String = ""
 
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -122,6 +123,7 @@ class StoreFragment : Fragment() {
                         val keyItem = issue.key.toString()
                         val itemData = issue.value as HashMap<*, *>
 
+                        refStore = itemData["refStore"] as String
                         val title = itemData["title"] as String
                         val category = itemData["category"] as String
                         val description = itemData["description"] as String
@@ -166,6 +168,7 @@ class StoreFragment : Fragment() {
                         binding.imageStoreVacio.visibility = View.GONE
                         allProducts = items
                         productAdapter.setItems(items)
+                        productAdapter.setStore(refStore)
                         productAdapter.notifyDataSetChanged()
                         binding.progressBarStore.visibility = View.GONE
                     }

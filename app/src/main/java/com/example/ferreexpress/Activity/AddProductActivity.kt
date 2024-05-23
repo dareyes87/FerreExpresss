@@ -157,8 +157,9 @@ class AddProductActivity : AppCompatActivity() {
                     val review: Int = 0
                     val rating: Double = 0.0
 
-                    //Objeto del Producto
+                    //Objeto del Producto a publicar en la base de datos
                     val newProduct = mapOf(
+                        "refStore" to userID,
                         "title" to title,
                         "price" to price,
                         "oldPrice" to oldPrice,

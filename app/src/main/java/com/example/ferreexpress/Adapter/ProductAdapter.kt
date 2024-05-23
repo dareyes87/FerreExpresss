@@ -19,6 +19,7 @@ import android.text.style.StrikethroughSpan
 class ProductAdapter(private var productList: List<itemsDomain>, private val isSeller: Boolean) : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
     private lateinit var context: Context
+    private var IDStore: String = ""
 
     // ViewHolder para cada elemento de la lista
     inner class ViewHolder(private val binding: ViewholderProductBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -56,6 +57,7 @@ class ProductAdapter(private var productList: List<itemsDomain>, private val isS
                 intent.putExtra("object", product)
                 intent.putExtra("isSeller", isSeller)
                 intent.putExtra("keyProduct", product.keyProduct)
+                intent.putExtra("refStore", IDStore)
                 context.startActivity(intent)
             }
         }
@@ -80,6 +82,10 @@ class ProductAdapter(private var productList: List<itemsDomain>, private val isS
     fun setItems(newItems: ArrayList<itemsDomain>) {
         productList = newItems
         notifyDataSetChanged()
+    }
+
+    fun setStore(idStore: String){
+        IDStore = idStore
     }
 
 }

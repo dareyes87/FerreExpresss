@@ -100,6 +100,7 @@ class HomeFragment : Fragment() {
     private fun loadMoreProducts(startIndex: Int, count: Int = itemsPerPage) {
         isLoading = true
         val myRef: DatabaseReference = database.reference.child("Users")
+        var refStore: String = ""
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
@@ -114,6 +115,7 @@ class HomeFragment : Fragment() {
                             val keyItem = productSnapshot.key.toString()
                             val itemData = productSnapshot.value as HashMap<*, *>
 
+                            refStore = itemData["refStore"] as String
                             val title = itemData["title"] as String
                             val productCategory = itemData["category"] as String
                             val description = itemData["description"] as String
@@ -151,7 +153,7 @@ class HomeFragment : Fragment() {
                                 reviews
                             )
 
-                            if (rating >= 1.0) {
+                            if (rating >= 4.0) {
                                 items.add(item)
                                 currentCount++
                                 if (currentCount >= count) {
@@ -163,6 +165,8 @@ class HomeFragment : Fragment() {
                     }
 
                     allProducts.addAll(items)
+                    productAdapter.setItems(items)
+                    productAdapter.setStore(refStore)
                     productAdapter.notifyDataSetChanged()
                     binding.progressBarPopular.visibility = View.GONE
                     isLoading = false

@@ -14,6 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.ferreexpress.Activity.DetailActivity
 import com.example.ferreexpress.Domain.ReviewDomain
 import com.example.ferreexpress.Domain.itemsDomain
+import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.ViewholderProductBinding
 import com.example.ferreexpress.databinding.ViewholderReviewBinding
 
@@ -40,6 +41,18 @@ class ReviewAdapter(private val comentaryList: ArrayList<ReviewDomain>): Recycle
             binding.nameTxt.text = review.nameUser
             binding.descTxt.text = review.comentary
             binding.ratingTxt.text = review.rating.toString()
+
+            // Manejo seguro de la imagen del usuario
+            val picUrl = review.picUrl
+            if (!picUrl.isNullOrEmpty()) {
+                Glide.with(context)
+                    .load(picUrl)
+                    .apply(RequestOptions().transform(CenterCrop(), GranularRoundedCorners(8f, 8f, 8f, 8f)))
+                    .into(binding.pic)
+            } else {
+                // Muestra una imagen predeterminada si picUrl es nulo o vacío
+                binding.pic.setImageResource(R.drawable.account_icon)
+            }
         }
     }
 

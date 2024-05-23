@@ -2,6 +2,7 @@ package com.example.ferreexpress.Adapter
 
 import android.app.Dialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.view.animation.Animation
@@ -10,16 +11,16 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RatingBar
-import android.widget.Toast
 import androidx.annotation.NonNull
+import androidx.appcompat.app.AppCompatActivity
 import com.example.ferreexpress.R
 import com.google.android.gms.tasks.Task
-import com.google.android.gms.tasks.Tasks
 import com.google.firebase.Firebase
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
 
-class ReviewDialogAdapter(@NonNull context: Context, var keyProduct: String) : Dialog(context) {
+class ReviewDialogAdapter(@NonNull val activity: AppCompatActivity, var keyProduct: String, var idStore: String) : Dialog(activity) {
+
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +40,16 @@ class ReviewDialogAdapter(@NonNull context: Context, var keyProduct: String) : D
             animateImage(imageRatingBar)
         }
 
-        //PUBLICAR COMENTARIO DEL PRODUCTO
-        publicarComentario(keyProduct.toString())
+        //Datos del Usuario para los comentarios
+        sharedPref = activity.getSharedPreferences(
+            activity.getString(R.string.prefs_file),
+            AppCompatActivity.MODE_PRIVATE
+        )
+        val nameUser = sharedPref.getString("name", null)
+        val picUser = sharedPref.getString("profileImageUrl", null)
 
+        //PUBLICAR COMENTARIO DEL PRODUCTO
+        publicarComentario(keyProduct.toString(), nameUser.toString(), picUser.toString(), idStore.toString())
 
     }
 
@@ -53,7 +61,7 @@ class ReviewDialogAdapter(@NonNull context: Context, var keyProduct: String) : D
         ratingImage.startAnimation(scaleAnimation)
     }
 
-    private fun publicarComentario(productId: String) {
+    private fun publicarComentario(productId: String, nameUser: String, picUser: String, idStore: String) {
         val database = Firebase.database
         val userRef = database.getReference("Users")
 
@@ -67,21 +75,16 @@ class ReviewDialogAdapter(@NonNull context: Context, var keyProduct: String) : D
             val comentario = textComentario.text.toString()
             val rating = barRating.rating.toDouble()
 
-            val tasks: MutableList<Task<Uri>> = mutableListOf()
-
-            //Datos de relleno por el momento
-            val nombre: String = "Daniel Reyes"
-
             //Objeto del Comentario
             val newComentary = mapOf(
                 "comentary" to comentario,
                 "rating" to rating,
-                "nameUser" to nombre
+                "nameUser" to nameUser,
+                "urlUser" to picUser
             )
 
             //Agregarlo a la base de datos
-            val userId = "UserID_1"
-            val userComentaryRef = userRef.child(userId).child("products").child(productId).child("reviews")
+            val userComentaryRef = userRef.child(idStore).child("products").child(productId).child("reviews")
             val newComentaryRef = userComentaryRef.push()
             newComentaryRef.setValue(newComentary)
                 .addOnCompleteListener{
@@ -92,6 +95,5 @@ class ReviewDialogAdapter(@NonNull context: Context, var keyProduct: String) : D
                 }
         }
     }
-
 
 }

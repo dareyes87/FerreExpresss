@@ -97,6 +97,7 @@ class CategoryActivity : AppCompatActivity() {
 
         val items: ArrayList<itemsDomain> = ArrayList()
 
+        var refStore: String = ""
         //Obtenemos los datos de la pase de datos
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -110,6 +111,7 @@ class CategoryActivity : AppCompatActivity() {
                             val itemData = productSnapshot.value as HashMap<*, *> // Cast a HashMap
 
                             //Obtenemos los detalles del producto
+                            refStore = itemData["refStore"] as String
                             val title = itemData["title"] as String
                             val productCategory = itemData["category"] as String
                             val description = itemData["description"] as String
@@ -183,7 +185,9 @@ class CategoryActivity : AppCompatActivity() {
                         //Configura el RecyclerView para mostrar los productos
                         binding.recyclerSelectCategory.layoutManager =
                             GridLayoutManager(this@CategoryActivity, 2, GridLayoutManager.VERTICAL, false)
-                        binding.recyclerSelectCategory.adapter = ProductAdapter(items, false)
+                        val adapter = ProductAdapter(items, false)
+                        adapter.setStore(refStore)
+                        binding.recyclerSelectCategory.adapter = adapter
                     }
                     //Ocultamos la barra de progreso
                     binding.progressBarSelectCategory.visibility = View.GONE
