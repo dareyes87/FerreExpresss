@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RatingBar
+import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import com.example.ferreexpress.R
@@ -88,7 +89,8 @@ class ReviewDialogAdapter(@NonNull val activity: AppCompatActivity, var keyProdu
             val newComentaryRef = userComentaryRef.push()
             newComentaryRef.setValue(newComentary)
                 .addOnCompleteListener{
-
+                    Toast.makeText(activity, "Comentario publicado con éxito", Toast.LENGTH_SHORT).show()
+                    dismiss() // Cerrar el diálogo
                 }
                 .addOnFailureListener{e->
 

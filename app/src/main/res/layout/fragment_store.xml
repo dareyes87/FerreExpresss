@@ -5,6 +5,7 @@
     android:id="@+id/mainStore"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#212121"
     tools:context=".Activity.StoreFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -68,8 +69,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="125dp"
+                android:backgroundTint="#1B5E20"
                 android:fontFamily="@font/alata"
                 android:text="Crear Mi Comercio En Linea"
+                android:textColor="#FFFFFF"
+                android:textColorLink="#1B5E20"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -278,7 +282,7 @@
             android:scrollbarAlwaysDrawHorizontalTrack="false"
             android:src="@drawable/ic_add"
             android:visibility="gone"
-            app:backgroundTint="@color/AzulOscuro"
+            app:backgroundTint="#1B5E20"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

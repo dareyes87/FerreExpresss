@@ -43,6 +43,49 @@ class ReviewFragment(var key: String, var idStore: String) : Fragment() {
         initComentarios(key, idStore)
     }
 
+    private fun updateRatingAndReview(keyProduct: String, idStore: String) {
+        val productRef: DatabaseReference = database.reference
+            .child("Users").child(idStore)
+            .child("products").child(keyProduct)
+
+        val reviewsRef: DatabaseReference = productRef.child("reviews")
+
+        reviewsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                var totalRating = 0.0
+                var reviewCount = 0
+
+                for (reviewSnapshot in snapshot.children) {
+                    val review = reviewSnapshot.getValue(ReviewDomain::class.java)
+                    if (review != null) {
+                        totalRating += review.rating
+                        reviewCount++
+                    }
+                }
+
+                val averageRating = if (reviewCount > 0) totalRating / reviewCount else 0.0
+                val formattedRating = String.format("%.1f", averageRating).toDouble()
+
+                val updates = mapOf(
+                    "review" to reviewCount,
+                    "rating" to formattedRating
+                )
+
+                productRef.updateChildren(updates).addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        // Actualización exitosa
+                    } else {
+                        // Manejar el error
+                    }
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar el error
+            }
+        })
+    }
+
     private fun pushReview(view: View, keyP: String, idS: String){
         val pushReview: FloatingActionButton = view.findViewById(R.id.floatingButtonReview)
         pushReview.setOnClickListener{
@@ -86,7 +129,7 @@ class ReviewFragment(var key: String, var idStore: String) : Fragment() {
                             GridLayoutManager(requireContext(), 1, GridLayoutManager.VERTICAL, false)
                         binding.reviewView.adapter = ReviewAdapter(comentarys)
                     }
-
+                    updateRatingAndReview(key, idStore)
                 }
             }
 

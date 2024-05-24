@@ -1,6 +1,7 @@
 package com.example.ferreexpress.Helper
 
 import android.content.Context
+import com.google.gson.Gson
 import android.widget.Toast
 import com.example.ferreexpress.Domain.itemsDomain
 
@@ -41,7 +42,12 @@ class ManagmentCart(private val context: Context) {
         }
     }
 
-
+    fun clearCart() {
+        val cartList = ArrayList<itemsDomain>()
+        val editor = context.getSharedPreferences("CART", Context.MODE_PRIVATE).edit()
+        editor.putString("CART_LIST", Gson().toJson(cartList))
+        editor.apply()
+    }
 
     fun minusItem(
         listfood: ArrayList<itemsDomain>,
