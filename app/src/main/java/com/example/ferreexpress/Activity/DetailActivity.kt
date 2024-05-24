@@ -1,4 +1,5 @@
 package com.example.ferreexpress.Activity
+
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
@@ -16,6 +17,7 @@ import com.example.ferreexpress.Domain.itemsDomain
 import com.example.ferreexpress.Fragment.DescriptionFragment
 import com.example.ferreexpress.Fragment.ReviewFragment
 import com.example.ferreexpress.Helper.ManagmentCart
+import com.example.ferreexpress.R
 import com.example.ferreexpress.databinding.ActivityDetailBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -43,8 +45,14 @@ class DetailActivity : AppCompatActivity() {
         binding.deleteBtn.visibility = View.GONE
         binding.editBtn.visibility = View.GONE
 
+        // Datos Extras Necesarios
         var key = intent.getStringExtra("keyProduct")
+        var idStore = intent.getStringExtra("refStore")
         val isSeller = intent.getBooleanExtra("isSeller", false)
+
+        val sharedPref = this.getSharedPreferences(getString(R.string.prefs_file), MODE_PRIVATE)
+        val userID = sharedPref.getString("usuario", null)
+
         if (isSeller) {
             // Si es vendedor, ocultar lo siguiente
             binding.addTocartBtn.visibility = View.GONE
@@ -61,7 +69,7 @@ class DetailActivity : AppCompatActivity() {
             builder.setMessage("¿Estás seguro de que deseas eliminar este producto?")
             builder.setPositiveButton("Sí") { dialog, which ->
                 // Elimina el producto de la base de datos
-                deleteProduct(key.toString())
+                deleteProduct(key.toString(), userID.toString())
 
                 Toast.makeText(
                     this,
@@ -69,7 +77,7 @@ class DetailActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                // Después de eliminar, puedes cerrar esta actividad o realizar otras acciones necesarias
+                // Cierra la actividad
                 finish()
             }
             builder.setNegativeButton("Cancelar") { dialog, which ->
@@ -95,7 +103,7 @@ class DetailActivity : AppCompatActivity() {
         managmentCart = ManagmentCart(this)
         getBundles()
         banners()
-        setupViewPager(key.toString())
+        setupViewPager(key.toString(), idStore.toString())
     }
 
     private fun agregarAFavoritos(productId: String) {
@@ -116,12 +124,12 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    fun deleteProduct(productId: String) {
+    fun deleteProduct(productId: String, userID: String) {
         val database = Firebase.database
         val usersRef = database.getReference("Users")
 
         // Suponiendo que tengas el ID del usuario y el ID del producto
-        val userId = "UserID_1" // Deberías obtener esto dinámicamente
+        val userId = userID
         val productIdToDelete = productId
 
         // Referencia al producto que deseas eliminar
@@ -158,10 +166,10 @@ class DetailActivity : AppCompatActivity() {
         binding.viewpageSlider.getChildAt(0).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
     }
 
-    private fun setupViewPager(key: String) {
+    private fun setupViewPager(key: String, idStore: String) {
         val adapter = ViewPagerAdapter(supportFragmentManager)
         val tab1: DescriptionFragment = DescriptionFragment()
-        val tab2: ReviewFragment = ReviewFragment(key)
+        val tab2: ReviewFragment = ReviewFragment(key, idStore)
 
         val bundle1: Bundle = Bundle()
         val bundle2: Bundle = Bundle()

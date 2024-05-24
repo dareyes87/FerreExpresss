@@ -22,7 +22,7 @@ class StoreFragment : Fragment() {
 
     private lateinit var binding: FragmentStoreBinding
     private lateinit var database: FirebaseDatabase
-    private lateinit var allProducts: ArrayList<itemsDomain>
+    private var allProducts: ArrayList<itemsDomain> = ArrayList()
     private lateinit var productAdapter: ProductAdapter
 
     override fun onCreateView(
@@ -31,6 +31,7 @@ class StoreFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentStoreBinding.inflate(inflater, container, false)
+        database = FirebaseDatabase.getInstance()
         return binding.root
     }
 
@@ -44,11 +45,20 @@ class StoreFragment : Fragment() {
         val sharedPref = requireActivity().getSharedPreferences(getString(R.string.prefs_file), Context.MODE_PRIVATE)
         val userType = sharedPref.getString("type", null)
 
+        // Obtener el id del usuario
+        val userID = sharedPref.getString("usuario", null)
+
         if (userType == "comprador") {
             // Si el usuario es comprador, mostrar layoutStoreNoOpen y ocultar layoutStoreYesOpen
             binding.layoutStoreNoOpen.visibility = View.VISIBLE
             binding.layoutStoreYesOpen.visibility = View.GONE
             binding.floatBtnAddProduct.visibility = View.GONE
+
+            binding.btnToRegistro.setOnClickListener{
+                val intent = Intent(requireContext(), RegistroComercioActivity::class.java)
+                startActivity(intent)
+            }
+
         } else if (userType == "vendedor") {
             // Si el usuario es vendedor, mostrar layoutStoreYesOpen y ocultar layoutStoreNoOpen
             binding.layoutStoreNoOpen.visibility = View.GONE
@@ -69,7 +79,7 @@ class StoreFragment : Fragment() {
             }
 
             // Inicializar productos
-            initProducts()
+            initProducts(userID.toString())
 
             // Configurar búsqueda de productos
             binding.editTextBuscarEnStore.addTextChangedListener(object : TextWatcher {
@@ -100,9 +110,11 @@ class StoreFragment : Fragment() {
         }
     }
 
-    private fun initProducts() {
-        val myRef: DatabaseReference = database.reference.child("Users").child("UserID_1").child("products")
+    private fun initProducts(userId: String) {
+        allProducts = ArrayList()
+        val myRef: DatabaseReference = database.reference.child("Users").child(userId).child("products")
         val items: ArrayList<itemsDomain> = ArrayList()
+        var refStore: String = ""
 
         myRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -111,6 +123,7 @@ class StoreFragment : Fragment() {
                         val keyItem = issue.key.toString()
                         val itemData = issue.value as HashMap<*, *>
 
+                        refStore = itemData["refStore"] as String
                         val title = itemData["title"] as String
                         val category = itemData["category"] as String
                         val description = itemData["description"] as String
@@ -149,10 +162,18 @@ class StoreFragment : Fragment() {
                         items.add(item)
                     }
 
-                    allProducts = items
-                    productAdapter.setItems(items)
-                    productAdapter.notifyDataSetChanged()
-                    binding.progressBarStore.visibility = View.GONE
+                    if (items.isEmpty()) {
+                        handleNoProductsFound()
+                    } else {
+                        binding.imageStoreVacio.visibility = View.GONE
+                        allProducts = items
+                        productAdapter.setItems(items)
+                        productAdapter.setStore(refStore)
+                        productAdapter.notifyDataSetChanged()
+                        binding.progressBarStore.visibility = View.GONE
+                    }
+                } else {
+                    handleNoProductsFound()
                 }
             }
 
@@ -161,4 +182,11 @@ class StoreFragment : Fragment() {
             }
         })
     }
+
+    private fun handleNoProductsFound() {
+        // Implementar la lógica para manejar la ausencia de productos
+        binding.imageStoreVacio.visibility = View.VISIBLE
+        binding.progressBarStore.visibility = View.GONE
+    }
+
 }
