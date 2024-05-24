@@ -100,7 +100,7 @@ class DetailActivity : AppCompatActivity() {
             agregarAFavoritos(key.toString())
         }
 
-        managmentCart = ManagmentCart(this)
+        managmentCart = ManagmentCart(this) //Carrito de compras
         getBundles()
         banners()
         setupViewPager(key.toString(), idStore.toString())
