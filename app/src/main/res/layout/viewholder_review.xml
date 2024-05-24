@@ -28,7 +28,7 @@
         app:layout_constraintTop_toTopOf="@+id/pic" />
 
     <TextView
-        android:id="@+id/descTxt"
+        android:id="@+id/txtcomprobante"
         android:layout_width="376dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
