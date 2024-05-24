@@ -1,33 +1,79 @@
 package com.example.ferreexpress.Activity
 
-
-
+import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.ferreexpress.Adapter.ProductAdapter
 import com.example.ferreexpress.Domain.ReviewDomain
 import com.example.ferreexpress.Domain.itemsDomain
-
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.*
 import com.example.ferreexpress.databinding.ActivityPedidosBinding
-class pedidos : AppCompatActivity() {
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+
+class Pedidos : AppCompatActivity() {
     private lateinit var database: FirebaseDatabase
     private lateinit var allProducts: ArrayList<itemsDomain>
     private lateinit var productAdapter: ProductAdapter
     private lateinit var binding: ActivityPedidosBinding
+    private lateinit var auth: FirebaseAuth
+    private lateinit var userId: String
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityPedidosBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        auth = FirebaseAuth.getInstance()
+        database = FirebaseDatabase.getInstance()
+        allProducts = ArrayList()
+
+        userId = auth.currentUser?.uid ?: ""
+
+        // Inicializar el adaptador antes de llamar a initProducts()
+        productAdapter = ProductAdapter(allProducts, true)
+
+        binding.recyclerFavoritos.layoutManager = LinearLayoutManager(this)
+        binding.recyclerFavoritos.adapter = productAdapter
+
+        // Aquí se configura el adaptador después de cargar los productos favoritos
+        initProducts()
+    }
+
     private fun initProducts() {
-        val myRef: DatabaseReference = database.reference.child("Users").child("UserID_1").child("favorites")
+        val favoritesRef: DatabaseReference = database.reference.child("Users").child(userId).child("favorites").child("products")
         val items: ArrayList<itemsDomain> = ArrayList()
 
-        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        favoritesRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    for (issue in snapshot.children) {
-                        val keyItem = issue.key.toString()
-                        val itemData = issue.value as HashMap<*, *>
+                    val favoriteProductIds = snapshot.children.mapNotNull { it.key }
+
+                    loadFavoriteProducts(favoriteProductIds)
+                } else {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(this@Pedidos, "No hay productos favoritos", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                binding.progressBar.visibility = View.GONE
+                Toast.makeText(this@Pedidos, "Error al cargar favoritos: ${error.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun loadFavoriteProducts(favoriteProductIds: List<String>) {
+        val items: ArrayList<itemsDomain> = ArrayList()
+
+        favoriteProductIds.forEach { productId ->
+            val productRef: DatabaseReference = database.reference.child("Products").child(productId)
+
+            productRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(productSnapshot: DataSnapshot) {
+                    if (productSnapshot.exists()) {
+                        val itemData = productSnapshot.value as HashMap<*, *>
 
                         val title = itemData["title"] as String
                         val category = itemData["category"] as String
@@ -52,7 +98,7 @@ class pedidos : AppCompatActivity() {
                         }
 
                         val item = itemsDomain(
-                            keyItem,
+                            productId,
                             title,
                             category,
                             description,
@@ -72,12 +118,15 @@ class pedidos : AppCompatActivity() {
                     productAdapter.notifyDataSetChanged()
                     binding.progressBar.visibility = View.GONE
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                // Manejar error
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(this@Pedidos, "Error al cargar producto: ${error.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
     }
 
 }
+
+
