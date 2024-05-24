@@ -171,8 +171,9 @@ class DetailActivity : AppCompatActivity() {
     private fun getBundles() {
         item = intent.getSerializableExtra("object") as? itemsDomain ?: return
         binding.titleTxt.text = item.title
-        binding.priceTxt.text = "$" + item.price
+        binding.priceTxt.text = "Q" + item.price
         binding.ratingBar.rating = item.rating.toFloat()
+        binding.ratingTxt.text = item.review.toString()
         binding.addTocartBtn.setOnClickListener { v ->
             item.numberinCart = numberOrder
             managmentCart.insertFood(item)
