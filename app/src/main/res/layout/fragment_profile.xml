@@ -51,7 +51,11 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -97,6 +101,12 @@
                 android:text="Configuración"
                 android:layout_marginTop="16dp"
                 android:layout_gravity="center" />
+
+            <Button
+                android:id="@+id/btnComprobantesPago"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Comprobantes de Pago" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
