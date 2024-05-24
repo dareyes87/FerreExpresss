@@ -17,6 +17,7 @@ import com.example.ferreexpress.Fragment.DescriptionFragment
 import com.example.ferreexpress.Fragment.ReviewFragment
 import com.example.ferreexpress.Helper.ManagmentCart
 import com.example.ferreexpress.databinding.ActivityDetailBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -28,11 +29,15 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var managmentCart: ManagmentCart
     private val slideHandler: Handler = Handler()
     private lateinit var databaseReference: DatabaseReference
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        auth = FirebaseAuth.getInstance()
+        databaseReference = Firebase.database.reference
 
         // Cosas ocultas por default
         binding.deleteBtn.visibility = View.GONE
@@ -84,7 +89,7 @@ class DetailActivity : AppCompatActivity() {
 
         // Configurar listener para favBtn
         binding.favBtn.setOnClickListener {
-            agregarAFavoritos()
+            agregarAFavoritos(key.toString())
         }
 
         managmentCart = ManagmentCart(this)
@@ -93,10 +98,22 @@ class DetailActivity : AppCompatActivity() {
         setupViewPager(key.toString())
     }
 
-    private fun agregarAFavoritos() {
-        // Aquí agregas la lógica para agregar a favoritos
-        Toast.makeText(this, "Producto agregado a favoritos", Toast.LENGTH_SHORT).show()
-        // Por ejemplo, puedes agregar la lógica para guardar en la base de datos de favoritos
+    private fun agregarAFavoritos(productId: String) {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val userId = currentUser.uid
+            val userFavoritesRef = databaseReference.child("Users").child(userId).child("favorites").child("products")
+
+            userFavoritesRef.child(productId).setValue(true)
+                .addOnSuccessListener {
+                    Toast.makeText(this, "Producto agregado a favoritos", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Error al agregar a favoritos: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+        } else {
+            Toast.makeText(this, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
+        }
     }
 
     fun deleteProduct(productId: String) {
@@ -104,7 +121,7 @@ class DetailActivity : AppCompatActivity() {
         val usersRef = database.getReference("Users")
 
         // Suponiendo que tengas el ID del usuario y el ID del producto
-        val userId = "UserID_1"
+        val userId = "UserID_1" // Deberías obtener esto dinámicamente
         val productIdToDelete = productId
 
         // Referencia al producto que deseas eliminar

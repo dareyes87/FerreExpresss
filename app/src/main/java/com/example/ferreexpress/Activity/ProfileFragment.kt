@@ -27,7 +27,7 @@ class ProfileFragment : Fragment() {
         imageViewFavorites = view.findViewById(R.id.imageFav)
         imageViewFavorites.setOnClickListener {
             // Acción a realizar cuando se hace clic en el ImageView de favoritos
-            val homeIntent = Intent(requireContext(), pedidos::class.java).apply {
+            val homeIntent = Intent(requireContext(), Pedidos::class.java).apply {
             }
             startActivity(homeIntent)
         }

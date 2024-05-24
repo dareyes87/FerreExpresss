@@ -82,10 +82,23 @@
                             android:contentDescription="Favoritos"
                             android:padding="8dp"
                             android:src="@drawable/estrella" />
+
                     </LinearLayout>
                 </LinearLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <!-- Aquí añadimos el botón de Configuración -->
+            <Button
+                android:id="@+id/configbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Configuración"
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center" />
         </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>
+
