@@ -6,12 +6,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import com.example.ferreexpress.R
+import org.checkerframework.common.subtyping.qual.Bottom
 
 class ProfileFragment : Fragment() {
 
     private lateinit var imageViewFavorites: ImageView
+    private lateinit var btnComprobantesPago: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,11 +28,22 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         imageViewFavorites = view.findViewById(R.id.imageFav)
+        btnComprobantesPago = view.findViewById(R.id.btnComprobantesPago)
+
         imageViewFavorites.setOnClickListener {
             // Acción a realizar cuando se hace clic en el ImageView de favoritos
             val homeIntent = Intent(requireContext(), Pedidos::class.java).apply {
             }
             startActivity(homeIntent)
         }
+
+        btnComprobantesPago.setOnClickListener{
+
+            val homeIntent = Intent(requireContext(), FacturasActivity::class.java).apply {
+            }
+            startActivity(homeIntent)
+
+        }
+
     }
 }
