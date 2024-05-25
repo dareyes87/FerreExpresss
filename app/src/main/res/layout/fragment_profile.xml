@@ -98,15 +98,32 @@
                 android:id="@+id/configbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Configuración"
+                android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:layout_gravity="center" />
+                android:background="@drawable/green_button_bg"
+                android:backgroundTint="#1B5E20"
+                android:text="Configuración" />
 
             <Button
                 android:id="@+id/btnComprobantesPago"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Comprobantes de Pago" />
+                android:backgroundTint="#1B5E20"
+                android:fontFamily="@font/alata"
+                android:text="Comprobantes de Pago"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btnCerrarSesion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#910000"
+                android:fontFamily="@font/alata"
+                android:text="Cerrar Sesion"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#FFFFFF"
+                android:textColorLink="#FFFFFF"
+                android:textSize="24sp" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

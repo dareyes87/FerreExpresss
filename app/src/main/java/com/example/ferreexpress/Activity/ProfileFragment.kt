@@ -9,12 +9,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import com.example.ferreexpress.R
+import com.google.firebase.auth.FirebaseAuth
 import org.checkerframework.common.subtyping.qual.Bottom
 
 class ProfileFragment : Fragment() {
 
     private lateinit var imageViewFavorites: ImageView
     private lateinit var btnComprobantesPago: Button
+    private lateinit var btnCerrarSesion: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,6 +31,7 @@ class ProfileFragment : Fragment() {
 
         imageViewFavorites = view.findViewById(R.id.imageFav)
         btnComprobantesPago = view.findViewById(R.id.btnComprobantesPago)
+        btnCerrarSesion = view.findViewById(R.id.btnCerrarSesion)
 
         imageViewFavorites.setOnClickListener {
             // Acción a realizar cuando se hace clic en el ImageView de favoritos
@@ -44,6 +47,17 @@ class ProfileFragment : Fragment() {
             startActivity(homeIntent)
 
         }
+
+        btnCerrarSesion.setOnClickListener {
+            // Cerrar sesión del usuario actual
+            FirebaseAuth.getInstance().signOut()
+
+            // Redirigir al usuario a la actividad de autenticación
+            val authIntent = Intent(requireContext(), AuthActivity::class.java)
+            authIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(authIntent)
+        }
+
 
     }
 }
