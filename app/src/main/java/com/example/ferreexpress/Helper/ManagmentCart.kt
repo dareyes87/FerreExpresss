@@ -32,6 +32,40 @@ class ManagmentCart(private val context: Context) {
         Toast.makeText(context, "Added to your Cart", Toast.LENGTH_SHORT).show()
     }
 
+    fun plusItem(
+        listfood: ArrayList<itemsDomain>,
+        position: Int,
+        changeNumberItemsListener: ChangeNumberItemsListener
+    ) {
+        listfood[position].numberinCart = listfood[position].numberinCart + 1
+        tinyDB.putListObject("CartList", listfood)
+        changeNumberItemsListener.changed()
+    }
+
+    fun minusItem(
+        listfood: ArrayList<itemsDomain>,
+        position: Int,
+        changeNumberItemsListener: ChangeNumberItemsListener
+    ) {
+        if (listfood[position].numberinCart == 1) {
+            listfood.removeAt(position)
+        } else {
+            listfood[position].numberinCart = listfood[position].numberinCart - 1
+        }
+        tinyDB.putListObject("CartList", listfood)
+        changeNumberItemsListener.changed()
+    }
+
+    val totalFee: Double
+        get() {
+            val listfood2 = getListCart()
+            var fee = 0.0
+            for (i in listfood2.indices) {
+                fee += listfood2[i].price * listfood2[i].numberinCart
+            }
+            return fee
+        }
+
     fun getListCart(): ArrayList<itemsDomain> {
         try {
             return tinyDB.getListObject("CartList")
@@ -49,37 +83,4 @@ class ManagmentCart(private val context: Context) {
         editor.apply()
     }
 
-    fun minusItem(
-        listfood: ArrayList<itemsDomain>,
-        position: Int,
-        changeNumberItemsListener: ChangeNumberItemsListener
-    ) {
-        if (listfood[position].numberinCart == 1) {
-            listfood.removeAt(position)
-        } else {
-            listfood[position].numberinCart = listfood[position].numberinCart - 1
-        }
-        tinyDB.putListObject("CartList", listfood)
-        changeNumberItemsListener.changed()
-    }
-
-    fun plusItem(
-        listfood: ArrayList<itemsDomain>,
-        position: Int,
-        changeNumberItemsListener: ChangeNumberItemsListener
-    ) {
-        listfood[position].numberinCart = listfood[position].numberinCart + 1
-        tinyDB.putListObject("CartList", listfood)
-        changeNumberItemsListener.changed()
-    }
-
-    val totalFee: Double
-        get() {
-            val listfood2 = getListCart()
-            var fee = 0.0
-            for (i in listfood2.indices) {
-                fee += listfood2[i].price * listfood2[i].numberinCart
-            }
-            return fee
-        }
 }
