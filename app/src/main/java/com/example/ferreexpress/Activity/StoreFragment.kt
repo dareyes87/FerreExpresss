@@ -8,8 +8,11 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.example.ferreexpress.Adapter.ProductAdapter
 import com.example.ferreexpress.Domain.ReviewDomain
 import com.example.ferreexpress.Domain.itemsDomain
@@ -24,6 +27,11 @@ class StoreFragment : Fragment() {
     private lateinit var database: FirebaseDatabase
     private var allProducts: ArrayList<itemsDomain> = ArrayList()
     private lateinit var productAdapter: ProductAdapter
+
+    //Variables para la info del comercio
+    private lateinit var nameComercio: TextView
+    private lateinit var desComercio: TextView
+    private lateinit var urlComercio: ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +55,12 @@ class StoreFragment : Fragment() {
 
         // Obtener el id del usuario
         val userID = sharedPref.getString("usuario", null)
+
+        //Info del negocio
+        nameComercio = binding.textViewNameNegocio
+        desComercio = binding.textViewDesNegocio
+        urlComercio = binding.imageViewNegocio
+
 
         if (userType == "comprador") {
             // Si el usuario es comprador, mostrar layoutStoreNoOpen y ocultar layoutStoreYesOpen
@@ -77,6 +91,9 @@ class StoreFragment : Fragment() {
                 val intent = Intent(requireContext(), AddProductActivity::class.java)
                 startActivity(intent)
             }
+
+            //Carga la info del local
+            initInfoComercio(userID.toString())
 
             // Inicializar productos
             initProducts(userID.toString())
@@ -109,6 +126,34 @@ class StoreFragment : Fragment() {
             })
         }
     }
+
+    private fun initInfoComercio(userId: String){
+        val myRef: DatabaseReference = database.reference.child("Users").child(userId)
+
+        myRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val comercioData = snapshot.value as HashMap<*, *>
+                    val nombreComercio = comercioData["nombreComercio"] as String
+                    val descripcionComercio = comercioData["descripcionComercio"] as String
+                    val urlImagenComercio = comercioData["logoComercio"] as String
+
+                    nameComercio.text = nombreComercio
+                    desComercio.text = descripcionComercio
+
+                    Glide.with(requireContext())
+                        .load(urlImagenComercio)
+                        .into(urlComercio)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Manejar error
+            }
+        })
+    }
+
+
 
     private fun initProducts(userId: String) {
         allProducts = ArrayList()
